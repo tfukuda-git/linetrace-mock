@@ -944,17 +944,13 @@ function showScreen(name) {
 
 // ── Comment System ─────────────────────────────────────────────
 const CONFIG = {
-  // Set these to enable GitHub Issues backend
-  owner: '',   // e.g. 'your-org'
-  repo: '',    // e.g. 'your-mock-repo'
-  pat: '',     // Fine-grained PAT with Issues R/W
+  owner: 'tfukuda-git',
+  repo: 'linetrace-mock',
+  pat: localStorage.getItem('mock-github-pat') || '',
   label: 'mock-comment',
 };
 
-// Try loading from env (for GitHub Pages build)
-// Set COMMENT_OWNER, COMMENT_REPO, COMMENT_PAT as build-time vars
-// or configure below manually
-let comments = []; // { id, screenKey, anchor, author, body, replies: [], resolved, x, y, created }
+let comments = [];
 let userName = localStorage.getItem('mock-commenter-name') || '';
 let commentMode = false;
 let panelOpen = false;
@@ -962,8 +958,22 @@ let showResolved = false;
 let openPinId = null;
 let pollInterval = null;
 
+// ── PAT Setup (one-time) ──
+function checkPat() {
+  if (!CONFIG.pat) {
+    const pat = prompt('GitHub PAT を入力してください（初回のみ・localStorageに保存）:');
+    if (pat && pat.startsWith('github_pat_')) {
+      CONFIG.pat = pat;
+      localStorage.setItem('mock-github-pat', pat);
+      pollInterval = setInterval(refreshComments, 10000);
+      refreshComments();
+    }
+  }
+}
+
 // ── Name Dialog ──
 function checkName() {
+  checkPat();
   if (!userName) {
     document.getElementById('name-dialog').classList.add('open');
     document.getElementById('name-input').focus();
@@ -1332,13 +1342,12 @@ function escapeHtml(str) {
 
 // ── Init ──
 loadFromLocal();
-checkName();
 renderPins();
 renderPanel();
 
-// Auto-poll if GitHub is configured
-if (CONFIG.owner && CONFIG.pat) {
+if (CONFIG.pat) {
   pollInterval = setInterval(refreshComments, 10000);
+  refreshComments();
 }
 </script>
 
