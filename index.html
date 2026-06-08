@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linetrace PR-1 Mock - おまかせオンボーディング</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f8fb; color: #0f1b2d; line-height: 1.5; }
+  a { text-decoration: none; color: inherit; }
+
+  /* ── Screen Nav (top tab bar) ── */
+  .screen-nav {
+    position: sticky; top: 0; z-index: 100;
+    background: #1e1e2e; color: #fff;
+    display: flex; align-items: center; gap: 0;
+    border-bottom: 2px solid #06c755;
+    font-size: 13px;
+  }
+  .screen-nav-label {
+    padding: 10px 16px; font-weight: 700; color: #06c755; white-space: nowrap; border-right: 1px solid #333;
+  }
+  .screen-nav button {
+    padding: 10px 18px; background: none; border: none; color: #aaa; cursor: pointer; font-size: 13px; white-space: nowrap;
+    border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s;
+  }
+  .screen-nav button:hover { color: #fff; background: rgba(255,255,255,0.05); }
+  .screen-nav button.active { color: #fff; border-bottom-color: #06c755; font-weight: 600; }
+  .screen-nav .nav-spacer { flex: 1; }
+  .screen-nav .diff-badge {
+    background: #f59e0b; color: #000; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 8px; margin-left: 6px;
+  }
+
+  /* ── App Shell ── */
+  .app-header {
+    background: #fff; border-bottom: 1px solid #e4e9f0; padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .app-header .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+  .app-header .logo span { color: #06c755; }
+  .app-header nav { display: flex; gap: 14px; align-items: center; font-size: 13px; }
+  .app-header nav a { color: #3a4a61; padding: 6px 12px; border-radius: 6px; }
+  .app-header nav .active-nav { color: #06c755; font-weight: 600; background: rgba(6,199,85,0.1); }
+  .app-header nav .btn-logout { background: none; border: none; font-size: 13px; color: #6b7a8d; cursor: pointer; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 32px; }
+
+  /* ── Cards ── */
+  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.25rem; }
+  .card-elevated { background: #fff; border-radius: 12px; border: 1px solid #e4e9f0; box-shadow: 0 1px 3px rgba(15,27,45,.06), 0 4px 12px rgba(15,27,45,.04); }
+
+  /* ── Buttons ── */
+  .btn-primary { background: #06c755; color: #fff; border: none; padding: 0.6rem 2rem; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; }
+  .btn-primary:hover { background: #05b34c; }
+  .btn-secondary { background: #fff; color: #06c755; border: 2px solid #06c755; padding: 0.6rem 2rem; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; }
+  .btn-secondary:hover { background: rgba(6,199,85,0.05); }
+
+  /* ── Progress dots ── */
+  .progress-dots { display: flex; gap: 3px; }
+  .progress-dot { width: 24px; height: 4px; border-radius: 2px; }
+  .progress-dot.done { background: #06c755; }
+  .progress-dot.pending { background: #e5e7eb; }
+
+  /* ── Setup Step Row ── */
+  .step-row {
+    padding: 16px 24px; border-top: 1px solid #e4e9f0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .step-row .step-left { display: flex; align-items: center; gap: 16px; flex: 1; }
+  .step-circle {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px;
+  }
+  .step-circle.done { background: #06c755; color: #fff; }
+  .step-circle.pending { background: #f3f4f6; color: #6b7280; border: 2px solid #cfd6e0; }
+
+  /* ── NEW: Omakase Choice Banner ── */
+  .omakase-banner {
+    background: linear-gradient(135deg, #f0f7ff 0%, #e8f5e9 100%);
+    border: 2px solid #06c755;
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .omakase-banner::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(6,199,85,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(30%, -30%);
+  }
+  .omakase-banner h2 {
+    font-size: 20px; font-weight: 800; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .omakase-banner .subtitle { font-size: 14px; color: #3a4a61; margin-bottom: 24px; }
+  .omakase-choices {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .omakase-choice {
+    background: #fff; border-radius: 12px; padding: 24px;
+    border: 2px solid #e4e9f0;
+    cursor: pointer; transition: all 0.2s;
+    position: relative;
+  }
+  .omakase-choice:hover { border-color: #06c755; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(6,199,85,0.12); }
+  .omakase-choice.recommended { border-color: #06c755; }
+  .omakase-choice.recommended::after {
+    content: 'おすすめ';
+    position: absolute; top: -1px; right: 16px;
+    background: #06c755; color: #fff;
+    font-size: 11px; font-weight: 700;
+    padding: 4px 12px; border-radius: 0 0 8px 8px;
+  }
+  .omakase-choice .choice-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin-bottom: 14px;
+  }
+  .omakase-choice h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .omakase-choice p { font-size: 13px; color: #6b7a8d; line-height: 1.6; margin-bottom: 16px; }
+  .omakase-choice .choice-steps {
+    font-size: 12px; color: #3a4a61; background: #f9fafb; border-radius: 8px; padding: 10px 14px;
+    margin-bottom: 16px;
+  }
+  .omakase-choice .choice-steps li { margin-bottom: 4px; list-style: none; }
+  .omakase-choice .choice-steps li::before { content: ''; display: inline-block; width: 6px; height: 6px; background: #06c755; border-radius: 50%; margin-right: 8px; }
+  .omakase-choice .choice-btn {
+    width: 100%; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 700; border: none; cursor: pointer;
+  }
+
+  /* ── NEW: Stuck User Banner (24h) ── */
+  .stuck-banner {
+    background: linear-gradient(135deg, #fff8e1 0%, #fff3e0 100%);
+    border: 2px solid #f59e0b;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .stuck-banner .stuck-left { display: flex; align-items: center; gap: 14px; }
+  .stuck-banner .stuck-icon { font-size: 32px; }
+  .stuck-banner h3 { font-size: 15px; font-weight: 700; color: #92400e; margin-bottom: 2px; }
+  .stuck-banner p { font-size: 12px; color: #78350f; }
+  .stuck-banner .stuck-btn {
+    background: #f59e0b; color: #fff; border: none; padding: 10px 24px;
+    border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap;
+  }
+  .stuck-banner .stuck-btn:hover { background: #d97706; }
+
+  /* ── NEW: Delegate escape button on each step ── */
+  .delegate-escape {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #6b7a8d; cursor: pointer;
+    padding: 6px 12px; border-radius: 6px; border: 1px solid #e5e7eb;
+    background: #fafafa; transition: all 0.15s; margin-left: 8px;
+  }
+  .delegate-escape:hover { border-color: #f59e0b; color: #92400e; background: #fffbeb; }
+
+  /* ── Settings Cards Grid ── */
+  .settings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .setting-card {
+    background: #fff; border-radius: 12px; padding: 22px; border: 1px solid #e4e9f0;
+    box-shadow: 0 1px 3px rgba(15,27,45,.06), 0 4px 12px rgba(15,27,45,.04);
+    transition: all 0.15s; cursor: pointer;
+  }
+  .setting-card:hover { border-color: #06c755; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(6,199,85,0.12); }
+  .setting-card .icon-box {
+    width: 40px; height: 40px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 14px; font-weight: 800;
+  }
+  .setting-card h4 {
+    font-size: 15px; font-weight: 700; margin-bottom: 6px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .setting-card p { color: #3a4a61; font-size: 12.5px; line-height: 1.55; margin-bottom: 14px; min-height: 56px; }
+  .setting-card .action { color: #06c755; font-size: 13px; font-weight: 600; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+  .badge-green { background: rgba(6,199,85,0.08); color: #04a847; }
+  .badge-gray { background: #f3f4f6; color: #6b7280; }
+  .badge-blue { background: rgba(31,111,235,0.1); color: #1f6feb; }
+
+  /* ── KPI Cards (Dashboard) ── */
+  .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 1.5rem; }
+  .kpi-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.25rem; }
+  .kpi-label { font-size: 11px; color: #9ca3af; font-weight: 500; margin-bottom: 8px; }
+  .kpi-value { font-size: 28px; font-weight: 600; color: #111827; }
+  .kpi-value.muted { color: #d1d5db; }
+  .kpi-sub { font-size: 11px; color: #9ca3af; margin-top: 4px; }
+
+  /* ── Dashboard Header ── */
+  .dash-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
+  }
+  .dash-header h1 { font-size: 20px; font-weight: 600; color: #111827; }
+  .dash-header .actions { display: flex; align-items: center; gap: 12px; }
+  .dash-header .actions a {
+    font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 6px;
+    background: #f5f5f5; color: #374151; border: 1px solid #e5e7eb;
+  }
+  .trial-badge {
+    font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 6px;
+    background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe;
+  }
+
+  /* ── Diff highlight for new elements ── */
+  .diff-new {
+    position: relative;
+  }
+  .diff-new::before {
+    content: 'NEW';
+    position: absolute; top: -8px; left: -8px; z-index: 10;
+    background: #f59e0b; color: #000; font-size: 9px; font-weight: 800;
+    padding: 2px 6px; border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  }
+
+  /* ── Screen containers ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── Annotation overlay ── */
+  .annotation {
+    position: absolute;
+    background: #1e1e2e; color: #fff;
+    font-size: 11px; padding: 6px 10px; border-radius: 6px;
+    max-width: 280px; line-height: 1.5;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 50; pointer-events: none;
+  }
+  .annotation::after {
+    content: ''; position: absolute;
+    border: 6px solid transparent;
+  }
+
+  /* ── Comment System ── */
+  .comment-fab {
+    position: fixed; bottom: 24px; right: 24px; z-index: 1000;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: #1e1e2e; color: #fff; border: 2px solid #06c755;
+    font-size: 20px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    transition: transform 0.15s;
+  }
+  .comment-fab:hover { transform: scale(1.1); }
+  .comment-fab .badge-count {
+    position: absolute; top: -4px; right: -4px;
+    background: #dc2626; color: #fff; font-size: 10px; font-weight: 700;
+    width: 20px; height: 20px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .comment-panel {
+    position: fixed; top: 0; right: 0; bottom: 0; width: 380px; z-index: 999;
+    background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+    transform: translateX(100%); transition: transform 0.25s;
+    display: flex; flex-direction: column;
+  }
+  .comment-panel.open { transform: translateX(0); }
+  .comment-panel-header {
+    padding: 16px 20px; border-bottom: 1px solid #e5e7eb;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .comment-panel-header h3 { font-size: 15px; font-weight: 700; }
+  .comment-panel-body { flex: 1; overflow-y: auto; padding: 16px; }
+  .comment-panel-footer { padding: 16px; border-top: 1px solid #e5e7eb; }
+
+  .comment-thread {
+    background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;
+    padding: 12px; margin-bottom: 12px; cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .comment-thread:hover { border-color: #06c755; }
+  .comment-thread .ct-screen { font-size: 10px; color: #9ca3af; margin-bottom: 4px; }
+  .comment-thread .ct-author { font-size: 12px; font-weight: 600; color: #374151; }
+  .comment-thread .ct-time { font-size: 10px; color: #9ca3af; margin-left: 8px; }
+  .comment-thread .ct-body { font-size: 13px; color: #4b5563; margin-top: 4px; line-height: 1.5; }
+  .comment-thread .ct-replies { font-size: 11px; color: #06c755; margin-top: 6px; }
+
+  /* Pin markers */
+  .comment-pin {
+    position: absolute; z-index: 90;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: #1e1e2e; color: #fff; border: 2px solid #06c755;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    transition: transform 0.15s;
+  }
+  .comment-pin:hover { transform: scale(1.15); }
+  .comment-pin.resolved { border-color: #9ca3af; opacity: 0.5; }
+
+  /* Comment popover */
+  .comment-popover {
+    position: absolute; z-index: 95;
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    width: 320px; max-height: 400px;
+    display: none;
+  }
+  .comment-popover.open { display: block; }
+  .comment-popover-header {
+    padding: 12px 16px; border-bottom: 1px solid #e5e7eb;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .comment-popover-body { padding: 12px 16px; max-height: 240px; overflow-y: auto; }
+  .comment-popover-footer { padding: 12px 16px; border-top: 1px solid #e5e7eb; }
+  .comment-popover-footer .reply-box {
+    display: flex; gap: 8px;
+  }
+  .comment-popover-footer input {
+    flex: 1; padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 13px;
+  }
+  .comment-popover-footer button {
+    background: #06c755; color: #fff; border: none; padding: 8px 14px; border-radius: 6px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+
+  .comment-msg { margin-bottom: 10px; }
+  .comment-msg .cm-meta { font-size: 11px; margin-bottom: 2px; }
+  .comment-msg .cm-author { font-weight: 600; color: #374151; }
+  .comment-msg .cm-time { color: #9ca3af; margin-left: 6px; }
+  .comment-msg .cm-text { font-size: 13px; color: #4b5563; line-height: 1.5; }
+
+  /* Comment mode overlay */
+  .comment-mode-banner {
+    position: fixed; top: 42px; left: 50%; transform: translateX(-50%); z-index: 1001;
+    background: #1e1e2e; color: #fff; padding: 8px 20px; border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    display: none; align-items: center; gap: 12px;
+  }
+  .comment-mode-banner.active { display: flex; }
+  .comment-mode-banner button {
+    background: #dc2626; color: #fff; border: none; padding: 4px 12px;
+    border-radius: 4px; font-size: 12px; cursor: pointer;
+  }
+  body.comment-mode { cursor: crosshair !important; }
+  body.comment-mode * { cursor: crosshair !important; }
+
+  /* Name dialog */
+  .name-dialog-overlay {
+    position: fixed; inset: 0; z-index: 2000;
+    background: rgba(0,0,0,0.5);
+    display: none; align-items: center; justify-content: center;
+  }
+  .name-dialog-overlay.open { display: flex; }
+  .name-dialog {
+    background: #fff; border-radius: 12px; padding: 32px;
+    width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+  .name-dialog h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .name-dialog p { font-size: 13px; color: #6b7a8d; margin-bottom: 20px; }
+  .name-dialog input {
+    width: 100%; padding: 10px 14px; border: 2px solid #e5e7eb; border-radius: 8px;
+    font-size: 15px; text-align: center; margin-bottom: 16px;
+  }
+  .name-dialog input:focus { border-color: #06c755; outline: none; }
+  .name-dialog button {
+    background: #06c755; color: #fff; border: none; padding: 10px 32px;
+    border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .omakase-choices, .settings-grid, .kpi-grid { grid-template-columns: 1fr !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Screen Navigation
+     ══════════════════════════════════════════════════════════════ -->
+<div class="screen-nav">
+  <div class="screen-nav-label">PR-1 Mock</div>
+  <button class="active" onclick="showScreen('onboarding-new')">
+    セットアップ（提案）<span class="diff-badge">NEW</span>
+  </button>
+  <button onclick="showScreen('dashboard-new')">
+    ダッシュボード（提案）<span class="diff-badge">NEW</span>
+  </button>
+  <button onclick="showScreen('dashboard-stuck')">
+    ダッシュボード 24h停滞<span class="diff-badge">NEW</span>
+  </button>
+  <button onclick="showScreen('onboarding-current')">セットアップ（現状）</button>
+  <button onclick="showScreen('dashboard-current')">ダッシュボード（現状）</button>
+  <div class="nav-spacer"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Screen 1: Onboarding - PROPOSED (PR-1)
+     ══════════════════════════════════════════════════════════════ -->
+<div id="screen-onboarding-new" class="screen active" data-screen-key="onboarding/proposed">
+  <div class="app-header">
+    <div class="logo">line<span>trace</span></div>
+    <nav>
+      <a href="#">ダッシュボード</a>
+      <span class="active-nav">セットアップ</span>
+      <button class="btn-logout">ログアウト</button>
+    </nav>
+  </div>
+  <div class="container">
+    <h1 style="font-size:24px; font-weight:800; margin-bottom:8px">セットアップ</h1>
+    <p style="font-size:14px; color:#6b7a8d; margin-bottom:32px">計測の基本設定と、各広告媒体・通知・アカウントの設定を行います。</p>
+
+    <!-- ★ NEW: おまかせ / 自分で 二択バナー ★ -->
+    <div class="omakase-banner diff-new" data-comment-anchor="omakase-choice-banner">
+      <h2>はじめに：セットアップ方法を選んでください</h2>
+      <p class="subtitle">どちらを選んでも、同じ機能がすべて使えます。あとからいつでも変更できます。</p>
+
+      <div class="omakase-choices">
+        <!-- Choice 1: おまかせ -->
+        <div class="omakase-choice recommended" data-comment-anchor="choice-omakase">
+          <div class="choice-icon" style="background:rgba(6,199,85,0.1)">🤝</div>
+          <h3>おまかせ設定（無料）</h3>
+          <p>アクセス権をお渡しいただくだけで、Linetraceチームが全設定を代行します。技術的な知識は一切不要です。</p>
+          <ul class="choice-steps">
+            <li>所要時間：お客様側は約5分</li>
+            <li>各プラットフォームの正規の共有機能で権限を付与</li>
+            <li>設定完了後にご連絡 + 引き継ぎ</li>
+            <li>トライアル期間中は無料</li>
+          </ul>
+          <button class="choice-btn" style="background:#06c755; color:#fff" onclick="alert('権限委譲の案内ページに遷移（未実装）')">
+            おまかせで始める →
+          </button>
+        </div>
+
+        <!-- Choice 2: 自分で -->
+        <div class="omakase-choice" data-comment-anchor="choice-self">
+          <div class="choice-icon" style="background:rgba(59,130,246,0.1)">⚡</div>
+          <h3>自分で設定する</h3>
+          <p>画面の指示に従って、ご自身で各サービスの設定を行います。GTMやLINE公式の操作に慣れている方向け。</p>
+          <ul class="choice-steps">
+            <li>所要時間：約10〜15分</li>
+            <li>Webhook URL設定 → GTMタグ設置 → CAPI接続</li>
+            <li>各ステップに手順ガイドあり</li>
+            <li>つまずいたら「おまかせ」に切替可</li>
+          </ul>
+          <button class="choice-btn" style="background:#fff; color:#06c755; border:2px solid #06c755" onclick="alert('既存セットアップフローに遷移')">
+            自分で設定する →
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 必須セットアップ（折りたたみ状態で表示） -->
+    <div style="margin-bottom:40px">
+      <div style="font-size:16px; font-weight:700; margin-bottom:16px; display:flex; align-items:center; gap:10px">
+        <span style="font-size:20px">🚀</span>
+        必須セットアップ
+        <span style="color:#6b7a8d; font-size:13px; font-weight:normal">— 計測を始めるための最小設定</span>
+      </div>
+
+      <div class="card-elevated" style="overflow:hidden">
+        <div style="padding:20px 24px; display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg,#fff,#fafbfd); border-bottom:1px solid #e4e9f0">
+          <h3 style="font-size:18px; font-weight:700; display:flex; align-items:center; gap:10px">
+            <span style="font-size:22px">⚙️</span>
+            セットアップを完了させましょう
+          </h3>
+          <div style="display:flex; align-items:center; gap:12px">
+            <span style="font-size:13px; color:#3a4a61; font-weight:600">0 / 2 完了</span>
+            <div style="width:120px; height:8px; background:#e4e9f0; border-radius:4px; overflow:hidden">
+              <div style="height:100%; background:#06c755; border-radius:4px; width:0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step-row">
+          <div class="step-left">
+            <div class="step-circle pending">1</div>
+            <div>
+              <div style="font-size:15px; font-weight:700">LINE Webhook URL を設定</div>
+              <div style="font-size:12px; color:#6b7a8d">友だち追加イベントを取得するために必要</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:4px">
+            <button style="padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; background:#06c755; color:#fff">
+              設定する →
+            </button>
+            <!-- ★ NEW: 代行エスケープ ★ -->
+            <span class="delegate-escape diff-new" data-comment-anchor="delegate-step1">
+              🤝 こちらで代行
+            </span>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-row">
+          <div class="step-left">
+            <div class="step-circle pending">2</div>
+            <div>
+              <div style="font-size:15px; font-weight:700">GTM タグを設置してテスト</div>
+              <div style="font-size:12px; color:#6b7a8d">広告クリック ID を Cookie で保持・計測開始</div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:4px">
+            <button style="padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; background:#06c755; color:#fff">
+              設定する →
+            </button>
+            <span class="delegate-escape" data-comment-anchor="delegate-step2">
+              🤝 こちらで代行
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 設定カード -->
+    <div style="margin-bottom:40px">
+      <div style="font-size:16px; font-weight:700; margin-bottom:16px; display:flex; align-items:center; gap:10px">
+        <span style="font-size:20px">🎛️</span>
+        設定
+        <span style="color:#6b7a8d; font-size:13px; font-weight:normal">— 必要なものだけご利用ください</span>
+      </div>
+      <div class="settings-grid">
+        <div class="setting-card" data-comment-anchor="card-meta">
+          <div class="icon-box" style="background:rgba(24,119,242,0.1); color:#1877f2">M</div>
+          <h4>Meta CAPI 接続 <span class="badge badge-gray">未接続</span></h4>
+          <p>Meta 広告に 3 つの CV（友だち追加・LINE 内 CV・LINE 経由 Web CV）を Conversions API で自動返却。</p>
+          <div style="display:flex; align-items:center; justify-content:space-between">
+            <span class="action">接続する →</span>
+            <span class="delegate-escape" style="margin-left:0" data-comment-anchor="delegate-meta">🤝 代行</span>
+          </div>
+        </div>
+        <div class="setting-card">
+          <div class="icon-box" style="background:rgba(66,133,244,0.1); color:#4285f4">G</div>
+          <h4>Google CAPI 接続 <span class="badge badge-gray">未接続</span></h4>
+          <p>Google Ads に 3 つの CV を GA4 Measurement Protocol で返却。gclid キャプチャ対応。</p>
+          <div style="display:flex; align-items:center; justify-content:space-between">
+            <span class="action">接続する →</span>
+            <span class="delegate-escape" style="margin-left:0">🤝 代行</span>
+          </div>
+        </div>
+        <div class="setting-card">
+          <div class="icon-box" style="background:rgba(255,0,51,0.1); color:#ff0033">Y</div>
+          <h4>Yahoo CAPI 接続 <span class="badge badge-gray">未接続</span></h4>
+          <p>Yahoo 検索広告・ディスプレイ広告に 3 つの CV を返却。CV ごとの conv_id 分離対応。</p>
+          <div style="display:flex; align-items:center; justify-content:space-between">
+            <span class="action">接続する →</span>
+            <span class="delegate-escape" style="margin-left:0">🤝 代行</span>
+          </div>
+        </div>
+        <div class="setting-card">
+          <div class="icon-box" style="background:transparent">🔔</div>
+          <h4>アラート通知 <span class="badge badge-gray">OFF</span></h4>
+          <p>Webhook 転送エラーや CAPI 送信エラーが発生した際にメールで通知。</p>
+          <span class="action">設定を開く →</span>
+        </div>
+        <div class="setting-card">
+          <div class="icon-box" style="background:transparent">👤</div>
+          <h4>アカウント</h4>
+          <p>LINE 公式アカウント名の編集、パスワード変更、サイト削除。</p>
+          <span class="action">設定を開く →</span>
+        </div>
+        <div class="setting-card">
+          <div class="icon-box" style="background:transparent">💰</div>
+          <h4>プラン</h4>
+          <p>現在のご利用プラン、請求情報、プラン変更。</p>
+          <span class="action">プランを見る →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Screen 2: Dashboard - PROPOSED (PR-1) - Normal state
+     ══════════════════════════════════════════════════════════════ -->
+<div id="screen-dashboard-new" class="screen" data-screen-key="dashboard/proposed">
+  <div style="background:#fff; max-width:100%; padding:0">
+    <div style="max-width:1100px; margin:0 auto; padding:2rem">
+      <!-- Trial badge -->
+      <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:10px 16px; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center">
+        <span style="font-size:13px; color:#1d4ed8">無料トライアル中（残り12日）</span>
+        <a href="#" style="font-size:12px; color:#2563eb; font-weight:600">プランを見る →</a>
+      </div>
+
+      <!-- Header -->
+      <div class="dash-header">
+        <div style="display:flex; align-items:center; gap:12px">
+          <h1>ダッシュボード</h1>
+          <select style="font-size:13px; padding:4px 8px; border:1px solid #e5e7eb; border-radius:6px; color:#374151">
+            <option>サンプルサイト</option>
+          </select>
+        </div>
+        <div class="actions">
+          <a href="#">設定</a>
+          <a href="#">広告アカウント追加</a>
+          <span class="trial-badge">無料トライアル中 — プランを見る</span>
+        </div>
+      </div>
+
+      <!-- ★ NEW: Setup Progress with おまかせ CTA ★ -->
+      <div class="card diff-new" style="margin-bottom:1rem; padding:1rem 1.25rem" data-comment-anchor="dash-setup-widget">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+          <h3 style="font-size:14px; font-weight:600; color:#111827">セットアップ進捗 (0/6)</h3>
+          <div class="progress-dots">
+            <div class="progress-dot pending"></div>
+            <div class="progress-dot pending"></div>
+            <div class="progress-dot pending"></div>
+            <div class="progress-dot pending"></div>
+            <div class="progress-dot pending"></div>
+            <div class="progress-dot pending"></div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px">
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">Webhook設定</span>
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">GTMタグ設置</span>
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">CAPI接続</span>
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">LINE内CV</span>
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">LINE経由Web CV</span>
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">アラート</span>
+        </div>
+        <!-- ★ NEW: おまかせ誘導 ★ -->
+        <div style="background:linear-gradient(135deg,#f0f7ff,#e8f5e9); padding:12px 16px; border-radius:8px; border:1px solid #06c755; display:flex; justify-content:space-between; align-items:center" data-comment-anchor="dash-omakase-cta">
+          <div>
+            <span style="font-size:13px; color:#0f1b2d; font-weight:600">セットアップがまだです — おまかせ設定なら5分で完了</span>
+            <p style="font-size:11px; color:#6b7a8d; margin-top:2px">アクセス権をお渡しいただくだけ。Linetraceチームが全設定を代行します（トライアル中無料）</p>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center">
+            <button style="font-size:12px; font-weight:700; color:#fff; background:#06c755; padding:8px 16px; border-radius:6px; border:none; cursor:pointer; white-space:nowrap">おまかせで始める</button>
+            <a href="#" style="font-size:12px; color:#6b7280; white-space:nowrap">自分で設定 →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- No data state -->
+      <div class="card" style="text-align:center; padding:3rem 2rem">
+        <p style="color:#9ca3af; font-size:14px; margin-bottom:12px">まだデータがありません</p>
+        <p style="color:#d1d5db; font-size:12px; margin-bottom:1.5rem">セットアップを完了すると、ここに計測データが表示されます</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Screen 3: Dashboard - 24h Stuck State
+     ══════════════════════════════════════════════════════════════ -->
+<div id="screen-dashboard-stuck" class="screen" data-screen-key="dashboard/stuck-24h">
+  <div style="background:#fff; max-width:100%; padding:0">
+    <div style="max-width:1100px; margin:0 auto; padding:2rem">
+      <div class="dash-header">
+        <div style="display:flex; align-items:center; gap:12px">
+          <h1>ダッシュボード</h1>
+          <select style="font-size:13px; padding:4px 8px; border:1px solid #e5e7eb; border-radius:6px; color:#374151">
+            <option>サンプルサイト</option>
+          </select>
+        </div>
+        <div class="actions">
+          <a href="#">設定</a>
+          <span class="trial-badge">無料トライアル中 — プランを見る</span>
+        </div>
+      </div>
+
+      <!-- ★ NEW: 24h Stuck Banner ★ -->
+      <div class="stuck-banner diff-new" data-comment-anchor="stuck-24h-banner">
+        <div class="stuck-left">
+          <div class="stuck-icon">⏰</div>
+          <div>
+            <h3>セットアップが止まっています</h3>
+            <p>登録から24時間経過しましたが、まだセットアップが完了していません。<br><strong>おまかせ設定なら、アクセス権を渡すだけで完了します（無料）。</strong></p>
+          </div>
+        </div>
+        <button class="stuck-btn" onclick="alert('おまかせ設定の案内ページへ')">おまかせ設定を申し込む</button>
+      </div>
+
+      <!-- Setup Progress - 0/6 -->
+      <div class="card" style="margin-bottom:1rem; padding:1rem 1.25rem">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+          <h3 style="font-size:14px; font-weight:600; color:#111827">セットアップ進捗 (0/6)</h3>
+          <div class="progress-dots">
+            <div class="progress-dot pending"></div>
+            <div class="progress-dot pending"></div>
+            <div class="progress-dot pending"></div>
+            <div class="progress-dot pending"></div>
+            <div class="progress-dot pending"></div>
+            <div class="progress-dot pending"></div>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px">
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">Webhook設定</span>
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">GTMタグ設置</span>
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">CAPI接続</span>
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">LINE内CV</span>
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">LINE経由Web CV</span>
+          <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">アラート</span>
+        </div>
+        <div style="background:#eff6ff; padding:8px 12px; border-radius:6px; border:1px solid #bfdbfe; display:flex; justify-content:space-between; align-items:center">
+          <span style="font-size:13px; color:#1d4ed8">次にやること: <strong>Webhook設定</strong></span>
+          <div style="display:flex; gap:8px">
+            <button style="font-size:12px; font-weight:600; color:#fff; background:#06c755; padding:4px 12px; border-radius:4px; border:none; cursor:pointer">設定する</button>
+            <a href="#" style="font-size:12px; color:#6b7280">手順を見る →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- No data -->
+      <div class="card" style="text-align:center; padding:3rem 2rem">
+        <p style="color:#9ca3af; font-size:14px; margin-bottom:12px">まだデータがありません</p>
+        <p style="color:#d1d5db; font-size:12px">セットアップを完了すると、ここに計測データが表示されます</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Screen 4: Onboarding - CURRENT (as-is)
+     ══════════════════════════════════════════════════════════════ -->
+<div id="screen-onboarding-current" class="screen" data-screen-key="onboarding/current">
+  <div class="app-header">
+    <div class="logo">line<span>trace</span></div>
+    <nav>
+      <a href="#">ダッシュボード</a>
+      <span class="active-nav">セットアップ</span>
+      <button class="btn-logout">ログアウト</button>
+    </nav>
+  </div>
+  <div class="container">
+    <h1 style="font-size:24px; font-weight:800; margin-bottom:8px">セットアップ</h1>
+    <p style="font-size:14px; color:#6b7a8d; margin-bottom:32px">計測の基本設定と、各広告媒体・通知・アカウントの設定を行います。</p>
+
+    <div style="margin-bottom:40px">
+      <div style="font-size:16px; font-weight:700; margin-bottom:16px; display:flex; align-items:center; gap:10px">
+        <span style="font-size:20px">🚀</span>
+        必須セットアップ
+        <span style="color:#6b7a8d; font-size:13px; font-weight:normal">— 計測を始めるための最小設定</span>
+      </div>
+
+      <div class="card-elevated" style="overflow:hidden">
+        <div style="padding:20px 24px; display:flex; justify-content:space-between; align-items:center; background:linear-gradient(135deg,#fff,#fafbfd); border-bottom:1px solid #e4e9f0">
+          <h3 style="font-size:18px; font-weight:700; display:flex; align-items:center; gap:10px">
+            <span style="font-size:22px">⚙️</span>
+            セットアップを完了させましょう
+          </h3>
+          <div style="display:flex; align-items:center; gap:12px">
+            <span style="font-size:13px; color:#3a4a61; font-weight:600">0 / 2 完了</span>
+            <div style="width:120px; height:8px; background:#e4e9f0; border-radius:4px; overflow:hidden">
+              <div style="height:100%; background:#06c755; border-radius:4px; width:0%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="step-row">
+          <div class="step-left">
+            <div class="step-circle pending">1</div>
+            <div>
+              <div style="font-size:15px; font-weight:700">LINE Webhook URL を設定</div>
+              <div style="font-size:12px; color:#6b7a8d">友だち追加イベントを取得するために必要</div>
+            </div>
+          </div>
+          <button style="padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; background:#06c755; color:#fff">設定する →</button>
+        </div>
+        <div class="step-row">
+          <div class="step-left">
+            <div class="step-circle pending">2</div>
+            <div>
+              <div style="font-size:15px; font-weight:700">GTM タグを設置してテスト</div>
+              <div style="font-size:12px; color:#6b7a8d">広告クリック ID を Cookie で保持・計測開始</div>
+            </div>
+          </div>
+          <button style="padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; border:none; cursor:pointer; background:#06c755; color:#fff">設定する →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings cards (same as current) -->
+    <div style="margin-bottom:40px">
+      <div style="font-size:16px; font-weight:700; margin-bottom:16px; display:flex; align-items:center; gap:10px">
+        <span style="font-size:20px">🎛️</span>
+        設定
+      </div>
+      <div class="settings-grid">
+        <div class="setting-card">
+          <div class="icon-box" style="background:rgba(24,119,242,0.1); color:#1877f2">M</div>
+          <h4>Meta CAPI 接続 <span class="badge badge-gray">未接続</span></h4>
+          <p>Meta 広告に CV を Conversions API で自動返却。</p>
+          <span class="action">接続する →</span>
+        </div>
+        <div class="setting-card">
+          <div class="icon-box" style="background:rgba(66,133,244,0.1); color:#4285f4">G</div>
+          <h4>Google CAPI 接続 <span class="badge badge-gray">未接続</span></h4>
+          <p>Google Ads に CV を GA4 Measurement Protocol で返却。</p>
+          <span class="action">接続する →</span>
+        </div>
+        <div class="setting-card">
+          <div class="icon-box" style="background:rgba(255,0,51,0.1); color:#ff0033">Y</div>
+          <h4>Yahoo CAPI 接続 <span class="badge badge-gray">未接続</span></h4>
+          <p>Yahoo 広告に CV を返却。</p>
+          <span class="action">接続する →</span>
+        </div>
+        <div class="setting-card">
+          <div class="icon-box">🔔</div>
+          <h4>アラート通知 <span class="badge badge-gray">OFF</span></h4>
+          <p>エラー発生時にメールで通知。</p>
+          <span class="action">設定を開く →</span>
+        </div>
+        <div class="setting-card">
+          <div class="icon-box">👤</div>
+          <h4>アカウント</h4>
+          <p>アカウント名の編集、パスワード変更。</p>
+          <span class="action">設定を開く →</span>
+        </div>
+        <div class="setting-card">
+          <div class="icon-box">💰</div>
+          <h4>プラン</h4>
+          <p>ご利用プラン、請求情報。</p>
+          <span class="action">プランを見る →</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Screen 5: Dashboard - CURRENT (as-is, 0/6 state)
+     ══════════════════════════════════════════════════════════════ -->
+<div id="screen-dashboard-current" class="screen" data-screen-key="dashboard/current">
+  <div style="max-width:1100px; margin:0 auto; padding:2rem">
+    <div class="dash-header">
+      <div style="display:flex; align-items:center; gap:12px">
+        <h1>ダッシュボード</h1>
+        <select style="font-size:13px; padding:4px 8px; border:1px solid #e5e7eb; border-radius:6px; color:#374151">
+          <option>サンプルサイト</option>
+        </select>
+      </div>
+      <div class="actions">
+        <a href="#">設定</a>
+        <span class="trial-badge">無料トライアル中 — プランを見る</span>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem; padding:1rem 1.25rem">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+        <h3 style="font-size:14px; font-weight:600; color:#111827">セットアップ進捗 (0/6)</h3>
+        <div class="progress-dots">
+          <div class="progress-dot pending"></div>
+          <div class="progress-dot pending"></div>
+          <div class="progress-dot pending"></div>
+          <div class="progress-dot pending"></div>
+          <div class="progress-dot pending"></div>
+          <div class="progress-dot pending"></div>
+        </div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px">
+        <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">Webhook設定</span>
+        <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">GTMタグ設置</span>
+        <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">CAPI接続</span>
+        <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">LINE内CV</span>
+        <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">LINE経由Web CV</span>
+        <span style="font-size:12px; padding:4px 10px; border-radius:6px; background:#f9fafb; color:#6b7280; border:1px solid #e5e7eb">アラート</span>
+      </div>
+      <div style="background:#eff6ff; padding:8px 12px; border-radius:6px; border:1px solid #bfdbfe; display:flex; justify-content:space-between; align-items:center">
+        <span style="font-size:13px; color:#1d4ed8">次にやること: <strong>Webhook設定</strong></span>
+        <div style="display:flex; gap:8px">
+          <button style="font-size:12px; font-weight:600; color:#fff; background:#06c755; padding:4px 12px; border-radius:4px; border:none; cursor:pointer">設定する</button>
+          <a href="#" style="font-size:12px; color:#6b7280">手順を見る →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="text-align:center; padding:3rem 2rem">
+      <p style="color:#9ca3af; font-size:14px; margin-bottom:12px">まだデータがありません</p>
+      <p style="color:#d1d5db; font-size:12px">スマホのChromeシークレットモードでLPを開き、LINEボタンをタップして友だち追加してください</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Comment System UI
+     ══════════════════════════════════════════════════════════════ -->
+
+<!-- Name Dialog -->
+<div id="name-dialog" class="name-dialog-overlay">
+  <div class="name-dialog">
+    <h3>名前を入力してください</h3>
+    <p>コメント投稿者として表示されます</p>
+    <input type="text" id="name-input" placeholder="例: 福田" autofocus>
+    <br>
+    <button onclick="saveName()">始める</button>
+  </div>
+</div>
+
+<!-- Comment Mode Banner -->
+<div id="comment-mode-banner" class="comment-mode-banner">
+  <span>コメントモード: 要素をクリックしてコメント</span>
+  <button onclick="exitCommentMode()">キャンセル (Esc)</button>
+</div>
+
+<!-- Comment Panel -->
+<div id="comment-panel" class="comment-panel">
+  <div class="comment-panel-header">
+    <h3>コメント一覧 (<span id="comment-count">0</span>)</h3>
+    <div style="display:flex; gap:8px; align-items:center">
+      <button onclick="refreshComments()" style="background:none; border:none; cursor:pointer; font-size:16px" title="更新">🔄</button>
+      <button onclick="toggleResolvedFilter()" id="filter-btn" style="background:none; border:1px solid #e5e7eb; border-radius:4px; padding:2px 8px; font-size:11px; cursor:pointer">未解決のみ</button>
+      <button onclick="togglePanel()" style="background:none; border:none; cursor:pointer; font-size:18px">✕</button>
+    </div>
+  </div>
+  <div class="comment-panel-body" id="comment-list">
+    <p style="color:#9ca3af; font-size:13px; text-align:center; padding:40px 0">
+      コメントはまだありません。<br>右下のボタンからコメントモードを開始してください。
+    </p>
+  </div>
+  <div class="comment-panel-footer">
+    <div style="font-size:11px; color:#9ca3af; text-align:center">
+      GitHub Issues をバックエンドに使用 ・ 10秒ごとに自動同期
+    </div>
+  </div>
+</div>
+
+<!-- Comment FAB -->
+<div style="position:fixed; bottom:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; align-items:flex-end">
+  <button class="comment-fab" onclick="togglePanel()" title="コメント一覧" style="width:42px; height:42px; font-size:16px">
+    💬
+    <span id="fab-badge" class="badge-count" style="display:none">0</span>
+  </button>
+  <button class="comment-fab" onclick="enterCommentMode()" title="新しいコメント" style="background:#06c755; border-color:#06c755">
+    +
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     JavaScript
+     ══════════════════════════════════════════════════════════════ -->
+<script>
+// ── Screen Navigation ──────────────────────────────────────────
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.querySelectorAll('.screen-nav button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  // Update pins for current screen
+  renderPins();
+}
+
+// ── Comment System ─────────────────────────────────────────────
+const CONFIG = {
+  // Set these to enable GitHub Issues backend
+  owner: '',   // e.g. 'your-org'
+  repo: '',    // e.g. 'your-mock-repo'
+  pat: '',     // Fine-grained PAT with Issues R/W
+  label: 'mock-comment',
+};
+
+// Try loading from env (for GitHub Pages build)
+// Set COMMENT_OWNER, COMMENT_REPO, COMMENT_PAT as build-time vars
+// or configure below manually
+let comments = []; // { id, screenKey, anchor, author, body, replies: [], resolved, x, y, created }
+let userName = localStorage.getItem('mock-commenter-name') || '';
+let commentMode = false;
+let panelOpen = false;
+let showResolved = false;
+let openPinId = null;
+let pollInterval = null;
+
+// ── Name Dialog ──
+function checkName() {
+  if (!userName) {
+    document.getElementById('name-dialog').classList.add('open');
+    document.getElementById('name-input').focus();
+  }
+}
+
+function saveName() {
+  const val = document.getElementById('name-input').value.trim();
+  if (!val) return;
+  userName = val;
+  localStorage.setItem('mock-commenter-name', val);
+  document.getElementById('name-dialog').classList.remove('open');
+}
+
+// ── Comment Mode ──
+function enterCommentMode() {
+  checkName();
+  if (!userName) return;
+  commentMode = true;
+  document.body.classList.add('comment-mode');
+  document.getElementById('comment-mode-banner').classList.add('active');
+  // Close panel
+  document.getElementById('comment-panel').classList.remove('open');
+  panelOpen = false;
+}
+
+function exitCommentMode() {
+  commentMode = false;
+  document.body.classList.remove('comment-mode');
+  document.getElementById('comment-mode-banner').classList.remove('active');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') exitCommentMode(); });
+
+// ── Click to place comment ──
+document.addEventListener('click', e => {
+  if (!commentMode) return;
+
+  // Ignore clicks on comment UI elements
+  if (e.target.closest('.comment-fab, .comment-panel, .comment-pin, .comment-popover, .comment-mode-banner, .name-dialog-overlay, .screen-nav')) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const activeScreen = document.querySelector('.screen.active');
+  const screenKey = activeScreen?.dataset.screenKey || 'unknown';
+
+  // Find nearest anchored element
+  const anchor = e.target.closest('[data-comment-anchor]');
+  const anchorId = anchor ? anchor.dataset.commentAnchor : null;
+
+  // Calculate position relative to screen
+  const rect = activeScreen.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+  const y = (e.clientY - rect.top + activeScreen.scrollTop);
+
+  const body = prompt('コメントを入力してください:');
+  if (!body || !body.trim()) { exitCommentMode(); return; }
+
+  const comment = {
+    id: 'local-' + Date.now(),
+    screenKey,
+    anchor: anchorId,
+    author: userName,
+    body: body.trim(),
+    replies: [],
+    resolved: false,
+    x: parseFloat(x),
+    y: y,
+    created: new Date().toISOString(),
+  };
+
+  comments.push(comment);
+  exitCommentMode();
+  renderPins();
+  renderPanel();
+
+  // Save to GitHub if configured
+  if (CONFIG.owner && CONFIG.repo && CONFIG.pat) {
+    saveToGitHub(comment);
+  } else {
+    // Save to localStorage as fallback
+    saveToLocal();
+  }
+}, true);
+
+// ── Panel ──
+function togglePanel() {
+  panelOpen = !panelOpen;
+  document.getElementById('comment-panel').classList.toggle('open', panelOpen);
+  if (panelOpen) renderPanel();
+}
+
+function toggleResolvedFilter() {
+  showResolved = !showResolved;
+  document.getElementById('filter-btn').textContent = showResolved ? 'すべて' : '未解決のみ';
+  renderPanel();
+}
+
+function renderPanel() {
+  const list = document.getElementById('comment-list');
+  const activeScreen = document.querySelector('.screen.active');
+  const screenKey = activeScreen?.dataset.screenKey;
+
+  const filtered = comments.filter(c => showResolved || !c.resolved);
+  document.getElementById('comment-count').textContent = comments.filter(c => !c.resolved).length;
+
+  const badge = document.getElementById('fab-badge');
+  const unresolvedCount = comments.filter(c => !c.resolved).length;
+  badge.textContent = unresolvedCount;
+  badge.style.display = unresolvedCount > 0 ? 'flex' : 'none';
+
+  if (filtered.length === 0) {
+    list.innerHTML = '<p style="color:#9ca3af; font-size:13px; text-align:center; padding:40px 0">コメントはまだありません。</p>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(c => `
+    <div class="comment-thread ${c.screenKey === screenKey ? '' : 'opacity-60'}" onclick="jumpToComment('${c.id}')" style="${c.resolved ? 'opacity:0.5' : ''}">
+      <div class="ct-screen">${c.screenKey} ${c.anchor ? '> ' + c.anchor : ''}</div>
+      <div>
+        <span class="ct-author">${c.author}</span>
+        <span class="ct-time">${new Date(c.created).toLocaleString('ja-JP', { month:'numeric', day:'numeric', hour:'numeric', minute:'numeric' })}</span>
+        ${c.resolved ? '<span style="color:#9ca3af; font-size:10px; margin-left:6px">解決済み</span>' : ''}
+      </div>
+      <div class="ct-body">${escapeHtml(c.body)}</div>
+      ${c.replies.length > 0 ? `<div class="ct-replies">${c.replies.length}件の返信</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function jumpToComment(id) {
+  const c = comments.find(x => x.id === id);
+  if (!c) return;
+
+  // Switch to correct screen
+  const screenEl = document.querySelector(`[data-screen-key="${c.screenKey}"]`);
+  if (screenEl) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    screenEl.classList.add('active');
+    // Update nav buttons
+    const screenName = screenEl.id.replace('screen-', '');
+    document.querySelectorAll('.screen-nav button').forEach(b => {
+      b.classList.toggle('active', b.onclick?.toString().includes(screenName));
+    });
+    renderPins();
+  }
+
+  // Close panel, open pin
+  togglePanel();
+  setTimeout(() => {
+    openPinId = id;
+    renderPins();
+    const pin = document.querySelector(`.comment-pin[data-id="${id}"]`);
+    if (pin) pin.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 100);
+}
+
+// ── Pins ──
+function renderPins() {
+  // Remove existing pins and popovers
+  document.querySelectorAll('.comment-pin, .comment-popover').forEach(el => el.remove());
+
+  const activeScreen = document.querySelector('.screen.active');
+  if (!activeScreen) return;
+  const screenKey = activeScreen.dataset.screenKey;
+
+  const screenComments = comments.filter(c => c.screenKey === screenKey && (showResolved || !c.resolved));
+
+  screenComments.forEach((c, i) => {
+    const pin = document.createElement('div');
+    pin.className = `comment-pin ${c.resolved ? 'resolved' : ''}`;
+    pin.dataset.id = c.id;
+    pin.textContent = i + 1;
+    pin.style.left = c.x + '%';
+    pin.style.top = c.y + 'px';
+    pin.onclick = (e) => {
+      e.stopPropagation();
+      openPinId = openPinId === c.id ? null : c.id;
+      renderPins();
+    };
+    activeScreen.style.position = 'relative';
+    activeScreen.appendChild(pin);
+
+    // Popover
+    if (openPinId === c.id) {
+      const pop = document.createElement('div');
+      pop.className = 'comment-popover open';
+      pop.style.left = (c.x > 60 ? c.x - 30 : c.x + 3) + '%';
+      pop.style.top = (c.y + 36) + 'px';
+      pop.onclick = e => e.stopPropagation();
+
+      pop.innerHTML = `
+        <div class="comment-popover-header">
+          <span style="font-size:12px; color:#9ca3af">${c.screenKey}</span>
+          <div style="display:flex; gap:6px">
+            <button onclick="toggleResolve('${c.id}')" style="background:none; border:none; cursor:pointer; font-size:14px" title="${c.resolved ? '未解決に戻す' : '解決済みにする'}">${c.resolved ? '🔄' : '✓'}</button>
+            <button onclick="openPinId=null; renderPins()" style="background:none; border:none; cursor:pointer; font-size:14px">✕</button>
+          </div>
+        </div>
+        <div class="comment-popover-body">
+          <div class="comment-msg">
+            <div class="cm-meta">
+              <span class="cm-author">${c.author}</span>
+              <span class="cm-time">${new Date(c.created).toLocaleString('ja-JP', { month:'numeric', day:'numeric', hour:'numeric', minute:'numeric' })}</span>
+            </div>
+            <div class="cm-text">${escapeHtml(c.body)}</div>
+          </div>
+          ${c.replies.map(r => `
+            <div class="comment-msg" style="padding-left:12px; border-left:2px solid #e5e7eb">
+              <div class="cm-meta">
+                <span class="cm-author">${r.author}</span>
+                <span class="cm-time">${new Date(r.created).toLocaleString('ja-JP', { month:'numeric', day:'numeric', hour:'numeric', minute:'numeric' })}</span>
+              </div>
+              <div class="cm-text">${escapeHtml(r.body)}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="comment-popover-footer">
+          <div class="reply-box">
+            <input type="text" placeholder="返信を書く..." id="reply-input-${c.id}" onkeydown="if(event.key==='Enter')addReply('${c.id}')">
+            <button onclick="addReply('${c.id}')">↩</button>
+          </div>
+        </div>
+      `;
+      activeScreen.appendChild(pop);
+    }
+  });
+}
+
+function addReply(commentId) {
+  const input = document.getElementById('reply-input-' + commentId);
+  if (!input || !input.value.trim()) return;
+
+  const c = comments.find(x => x.id === commentId);
+  if (!c) return;
+
+  c.replies.push({
+    author: userName,
+    body: input.value.trim(),
+    created: new Date().toISOString(),
+  });
+
+  saveToLocal();
+  renderPins();
+  renderPanel();
+}
+
+function toggleResolve(commentId) {
+  const c = comments.find(x => x.id === commentId);
+  if (!c) return;
+  c.resolved = !c.resolved;
+  openPinId = null;
+  saveToLocal();
+  renderPins();
+  renderPanel();
+}
+
+// ── Persistence (localStorage fallback) ──
+function saveToLocal() {
+  localStorage.setItem('linetrace-mock-comments', JSON.stringify(comments));
+}
+
+function loadFromLocal() {
+  try {
+    const stored = localStorage.getItem('linetrace-mock-comments');
+    if (stored) comments = JSON.parse(stored);
+  } catch {}
+}
+
+// ── GitHub Issues Backend ──
+async function saveToGitHub(comment) {
+  if (!CONFIG.owner || !CONFIG.pat) return;
+
+  const meta = {
+    screenKey: comment.screenKey,
+    anchor: comment.anchor,
+    x: comment.x,
+    y: comment.y,
+  };
+
+  const body = `**@${comment.author}:** ${comment.body}\n\n<!-- mock-meta: ${JSON.stringify(meta)} -->`;
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/issues`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${CONFIG.pat}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: `[${comment.screenKey}] ${comment.body.substring(0, 60)}`,
+        body,
+        labels: [CONFIG.label],
+      }),
+    });
+
+    if (res.ok) {
+      const issue = await res.json();
+      // Update local comment with GitHub issue number
+      const idx = comments.findIndex(c => c.id === comment.id);
+      if (idx >= 0) comments[idx].githubIssue = issue.number;
+      saveToLocal();
+    }
+  } catch (err) {
+    console.error('GitHub save failed:', err);
+  }
+}
+
+async function refreshComments() {
+  if (!CONFIG.owner || !CONFIG.pat) {
+    renderPanel();
+    return;
+  }
+
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/issues?labels=${CONFIG.label}&state=all&per_page=100`,
+      { headers: { 'Authorization': `Bearer ${CONFIG.pat}` } }
+    );
+    if (!res.ok) return;
+
+    const issues = await res.json();
+    const newComments = [];
+
+    for (const issue of issues) {
+      const metaMatch = issue.body?.match(/<!-- mock-meta: ({.*?}) -->/);
+      if (!metaMatch) continue;
+
+      const meta = JSON.parse(metaMatch[1]);
+      const authorMatch = issue.body?.match(/^\*\*@(.+?):\*\* /);
+
+      newComments.push({
+        id: 'gh-' + issue.number,
+        githubIssue: issue.number,
+        screenKey: meta.screenKey,
+        anchor: meta.anchor,
+        author: authorMatch?.[1] || 'unknown',
+        body: issue.body.replace(/^\*\*@.+?:\*\* /, '').replace(/\n\n<!-- mock-meta:.*-->/, '').trim(),
+        replies: [], // Would need to fetch issue comments
+        resolved: issue.state === 'closed',
+        x: meta.x,
+        y: meta.y,
+        created: issue.created_at,
+      });
+    }
+
+    if (newComments.length > 0) {
+      // Merge with local comments (local-* are local only)
+      const localOnly = comments.filter(c => c.id.startsWith('local-') && !c.githubIssue);
+      comments = [...newComments, ...localOnly];
+      saveToLocal();
+    }
+  } catch (err) {
+    console.error('GitHub refresh failed:', err);
+  }
+
+  renderPanel();
+  renderPins();
+}
+
+// ── Util ──
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ── Init ──
+loadFromLocal();
+checkName();
+renderPins();
+renderPanel();
+
+// Auto-poll if GitHub is configured
+if (CONFIG.owner && CONFIG.pat) {
+  pollInterval = setInterval(refreshComments, 10000);
+}
+</script>
+
+</body>
+</html>
