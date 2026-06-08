@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linetrace LP Mock - おまかせ設定訴求</title>
+<style>
+  :root {
+    --ink: #0f1b2d; --ink2: #3a4a61; --muted: #6b7a8d;
+    --line: #e4e9f0; --bg: #ffffff; --bg2: #f5f8fb;
+    --brand: #06c755; --brand-d: #04a847;
+    --warn: #e8533f; --radius: 14px; --shadow: 0 6px 24px rgba(15,27,45,.08);
+    --max: 1080px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; color: var(--ink); background: var(--bg); line-height: 1.7; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  section { padding: 72px 0; }
+  h2 { font-size: 30px; line-height: 1.3; margin: 0 0 14px; text-align: center; font-weight: 700; }
+  .eyebrow { color: var(--brand-d); font-weight: 800; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 12px; }
+  .sub { text-align: center; color: var(--muted); max-width: 640px; margin: 0 auto 44px; font-size: 16px; }
+  .btn { display: inline-block; text-decoration: none; border-radius: 999px; font-weight: 700; padding: 14px 28px; font-size: 15px; cursor: pointer; border: 0; transition: all 0.15s; }
+  .btn-primary { background: var(--brand); color: #fff !important; }
+  .btn-primary:hover { background: var(--brand-d); transform: translateY(-1px); }
+  .btn-ghost { background: #fff; color: var(--ink) !important; border: 1.5px solid var(--line); }
+  a { text-decoration: none; color: inherit; }
+
+  /* Screen Nav */
+  .screen-nav { position: sticky; top: 0; z-index: 100; background: #1e1e2e; color: #fff; display: flex; align-items: center; border-bottom: 2px solid #06c755; font-size: 13px; }
+  .screen-nav-label { padding: 10px 16px; font-weight: 700; color: #06c755; white-space: nowrap; border-right: 1px solid #333; }
+  .screen-nav button { padding: 10px 18px; background: none; border: none; color: #aaa; cursor: pointer; font-size: 13px; white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+  .screen-nav button:hover { color: #fff; background: rgba(255,255,255,0.05); }
+  .screen-nav button.active { color: #fff; border-bottom-color: #06c755; font-weight: 600; }
+  .screen-nav .nav-spacer { flex: 1; }
+  .diff-badge { background: #f59e0b; color: #000; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 8px; margin-left: 6px; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  .diff-new { position: relative; }
+  .diff-new::before { content: 'NEW'; position: absolute; top: -8px; left: -8px; z-index: 10; background: #f59e0b; color: #000; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
+
+  /* NAV */
+  header.lp-nav { position: sticky; top: 38px; z-index: 20; background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .lp-nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+  .logo { font-weight: 800; font-size: 22px; letter-spacing: -.02em; }
+  .logo span { color: var(--brand); }
+  .nav-cta { display: flex; align-items: center; gap: 14px; font-size: 14px; }
+  .nav-cta a.cta { background: var(--brand); color: #fff; padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; }
+
+  /* HERO */
+  .hero { padding: 80px 0 100px; background: linear-gradient(180deg, #f0fbf4 0%, #ffffff 70%); }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+  .hero h1 { font-size: 44px; line-height: 1.25; letter-spacing: -.02em; margin: 0 0 18px; font-weight: 700; }
+  .lead { font-size: 18px; color: var(--ink2); margin: 0 0 28px; }
+
+  /* TRUST */
+  .trust { background: #0f1b2d; color: #dce6f2; padding: 0; }
+  .trust .wrap { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; }
+  .trust .t { padding: 26px 22px; text-align: center; border-right: 1px solid #21344c; }
+  .trust .t:last-child { border-right: 0; }
+  .trust .t strong { display: block; font-size: 16px; color: #fff; margin-bottom: 2px; }
+  .trust .t span { font-size: 13px; color: #9fb3cc; }
+
+  /* SETUP SECTION */
+  .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto; }
+  .setup-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; position: relative; }
+  .setup-card.recommended { border: 2px solid var(--brand); }
+  .setup-card.recommended::after { content: 'おすすめ'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--brand); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 999px; }
+  .setup-card h3 { font-size: 20px; font-weight: 700; margin: 0 0 8px; }
+  .setup-card .price { font-size: 32px; font-weight: 800; margin: 8px 0 4px; }
+  .setup-card .price-unit { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+  .setup-card ul { list-style: none; padding: 0; margin: 0 0 18px; font-size: 14px; color: var(--ink2); }
+  .setup-card li { padding: 6px 0; border-bottom: 1px dashed var(--line); }
+  .setup-card li::before { content: '✓ '; color: var(--brand); font-weight: 700; }
+
+  /* SUPPORT 3col */
+  .support-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; max-width: 1000px; margin: 0 auto; }
+  .scard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; text-align: center; }
+  .scard.sfeat { border: 2px solid var(--brand); }
+  .scard h3 { margin: 0 0 8px; font-size: 16px; }
+  .scard .syen { font-size: 24px; font-weight: 800; margin: 8px 0; }
+  .scard .syen-unit { color: var(--muted); font-size: 13px; }
+  .scard ul { list-style: none; padding: 0; margin: 14px 0; text-align: left; font-size: 13px; color: var(--ink2); }
+  .scard li::before { content: '・'; color: var(--brand); }
+
+  /* GRID 3 */
+  .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+  .icard { border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; background: #fff; }
+  .icard .step-num { font-size: 48px; color: var(--brand); font-weight: 800; line-height: 1; margin-bottom: 8px; text-align: center; }
+  .icard h3 { margin: 0 0 6px; font-size: 17px; text-align: center; }
+  .icard p { margin: 0; color: var(--ink2); font-size: 14px; text-align: center; }
+
+  /* DEMO CARD */
+  .live-demo-card { background: #0f1b2d; border-radius: 18px; padding: 24px; color: #dce6f2; box-shadow: var(--shadow); }
+  .demo-stages { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .demo-stage-card { background: #1a2942; border-radius: 10px; padding: 12px; text-align: center; }
+  .demo-stage-card .day { font-size: 10px; color: #8aa0bb; letter-spacing: .06em; margin-bottom: 6px; }
+  .demo-stage-card .name { font-size: 11px; font-weight: 700; color: #fff; }
+  .demo-capi { background: #1a2942; border-radius: 10px; padding: 12px; margin-top: 12px; text-align: center; }
+  .demo-capi .label { font-size: 11px; color: #8aa0bb; margin-bottom: 6px; }
+  .demo-capi .platforms { display: flex; justify-content: center; gap: 10px; font-size: 12px; }
+  .demo-capi .platforms span { background: #0f1b2d; padding: 4px 10px; border-radius: 6px; }
+
+  /* FINAL CTA */
+  .final { background: #0f1b2d; color: #fff; text-align: center; }
+  .final h2 { color: #fff; font-size: 34px; }
+  .final p { color: #dce6f2; max-width: 640px; margin: 0 auto 28px; }
+
+  /* Comment System */
+  .comment-fab { position: fixed; bottom: 24px; right: 24px; z-index: 1000; width: 48px; height: 48px; border-radius: 50%; background: #1e1e2e; color: #fff; border: 2px solid #06c755; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+  .comment-fab:hover { transform: scale(1.1); }
+  .comment-fab .badge-count { position: absolute; top: -4px; right: -4px; background: #dc2626; color: #fff; font-size: 10px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .comment-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 380px; z-index: 999; background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,0.15); transform: translateX(100%); transition: transform 0.25s; display: flex; flex-direction: column; }
+  .comment-panel.open { transform: translateX(0); }
+  .comment-panel-header { padding: 16px 20px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; }
+  .comment-panel-header h3 { font-size: 15px; font-weight: 700; }
+  .comment-panel-body { flex: 1; overflow-y: auto; padding: 16px; }
+  .comment-thread { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; margin-bottom: 12px; cursor: pointer; }
+  .comment-thread:hover { border-color: #06c755; }
+  .comment-thread .ct-screen { font-size: 10px; color: #9ca3af; margin-bottom: 4px; }
+  .comment-thread .ct-author { font-size: 12px; font-weight: 600; color: #374151; }
+  .comment-thread .ct-time { font-size: 10px; color: #9ca3af; margin-left: 6px; }
+  .comment-thread .ct-body { font-size: 13px; color: #4b5563; margin-top: 4px; line-height: 1.5; }
+  .comment-pin { position: absolute; z-index: 90; width: 28px; height: 28px; border-radius: 50%; background: #1e1e2e; color: #fff; border: 2px solid #06c755; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .comment-pin:hover { transform: scale(1.15); }
+  .comment-popover { position: absolute; z-index: 95; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); width: 320px; display: none; }
+  .comment-popover.open { display: block; }
+  .comment-popover-header { padding: 12px 16px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; }
+  .comment-popover-body { padding: 12px 16px; max-height: 240px; overflow-y: auto; }
+  .comment-popover-footer { padding: 12px 16px; border-top: 1px solid #e5e7eb; }
+  .comment-popover-footer .reply-box { display: flex; gap: 8px; }
+  .comment-popover-footer input { flex: 1; padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 13px; }
+  .comment-popover-footer button { background: #06c755; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+  .comment-msg { margin-bottom: 10px; }
+  .comment-msg .cm-author { font-weight: 600; color: #374151; font-size: 11px; }
+  .comment-msg .cm-time { color: #9ca3af; margin-left: 6px; font-size: 10px; }
+  .comment-msg .cm-text { font-size: 13px; color: #4b5563; line-height: 1.5; }
+  .comment-mode-banner { position: fixed; top: 42px; left: 50%; transform: translateX(-50%); z-index: 1001; background: #1e1e2e; color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,0.3); display: none; align-items: center; gap: 12px; }
+  .comment-mode-banner.active { display: flex; }
+  .comment-mode-banner button { background: #dc2626; color: #fff; border: none; padding: 4px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; }
+  body.comment-mode, body.comment-mode * { cursor: crosshair !important; }
+  .name-dialog-overlay { position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; }
+  .name-dialog-overlay.open { display: flex; }
+  .name-dialog { background: #fff; border-radius: 12px; padding: 32px; width: 380px; text-align: center; }
+  .name-dialog h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .name-dialog p { font-size: 13px; color: #6b7a8d; margin-bottom: 20px; }
+  .name-dialog input { width: 100%; padding: 10px 14px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 15px; text-align: center; margin-bottom: 16px; }
+  .name-dialog input:focus { border-color: #06c755; outline: none; }
+  .name-dialog button { background: #06c755; color: #fff; border: none; padding: 10px 32px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+
+  @media (max-width: 860px) {
+    .hero .wrap, .setup-grid, .grid3, .support-grid, .trust .wrap { grid-template-columns: 1fr; }
+    h1 { font-size: 32px !important; }
+    h2 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Screen Nav -->
+<div class="screen-nav">
+  <div class="screen-nav-label">LP Mock</div>
+  <button class="active" onclick="showScreen('lp-proposed')">LP（提案）<span class="diff-badge">NEW</span></button>
+  <button onclick="showScreen('lp-current')">LP（現状）</button>
+  <div class="nav-spacer"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Screen 1: LP - PROPOSED
+     ══════════════════════════════════════════════════════════════ -->
+<div id="screen-lp-proposed" class="screen active" data-screen-key="lp/proposed">
+  <header class="lp-nav"><div class="wrap">
+    <div class="logo">line<span>trace</span></div>
+    <div class="nav-cta">
+      <a href="#">ログイン</a>
+      <a href="#" class="cta">2週間無料で試す</a>
+    </div>
+  </div></header>
+
+  <!-- HERO -->
+  <section class="hero"><div class="wrap">
+    <div>
+      <h1>LINEで消えていたCVを、<br/>広告に返す。</h1>
+      <p class="lead">
+        友だち追加・LINE内CV・LINE経由Web CV — 3つのCVを Meta・Google・Yahoo に Conversions API で自動返却。<br/>
+        GTM タグ 1 行・10 分で導入。
+      </p>
+      <a href="#" class="btn btn-primary">2週間無料で試す</a>
+      <div style="margin-top:10px; font-size:13px; color:var(--muted)">クレジットカード登録不要 / 設定 10 分</div>
+    </div>
+    <div class="live-demo-card">
+      <div style="font-size:13px; color:#9fb3cc; font-weight:700; margin-bottom:18px">3 つの CV を広告に返却</div>
+      <div class="demo-stages">
+        <div class="demo-stage-card"><div class="day">DAY 0</div><div style="font-size:24px; margin:4px 0 6px">💬</div><div class="name">友だち追加 CV</div></div>
+        <div class="demo-stage-card"><div class="day">DAY 1</div><div style="font-size:24px; margin:4px 0 6px">📝</div><div class="name">LINE 内 CV</div></div>
+        <div class="demo-stage-card"><div class="day">DAY 3</div><div style="font-size:24px; margin:4px 0 6px">🛒</div><div class="name">LINE 経由 Web CV</div></div>
+      </div>
+      <div class="demo-capi">
+        <div class="label">Conversions API で送信</div>
+        <div class="platforms"><span>Meta</span><span>Google</span><span>Yahoo</span></div>
+      </div>
+    </div>
+  </div></section>
+
+  <!-- ★ TRUST STRIP — 4列に変更、「設定代行0円」追加 ★ -->
+  <section class="trust diff-new" data-comment-anchor="trust-strip"><div class="wrap">
+    <div class="t"><div style="font-size:24px; margin-bottom:6px">⏱️</div><strong>最短10分で計測スタート</strong><span>GTM 1 行・Webhook 設定だけ</span></div>
+    <div class="t"><div style="font-size:24px; margin-bottom:6px">🤝</div><strong>設定代行 0円</strong><span>権限を渡すだけ・こちらで全設定</span></div>
+    <div class="t"><div style="font-size:24px; margin-bottom:6px">💴</div><strong>月 ¥10,000〜</strong><span>LINE公式 + 広告アカウント数の従量課金</span></div>
+    <div class="t"><div style="font-size:24px; margin-bottom:6px">🎯</div><strong>クレカ不要で試せる</strong><span>2 週間無料トライアル</span></div>
+  </div></section>
+
+  <!-- (中略: 課題・解決策セクションは現状と同じ想定、ここではセットアップとサポートのみモック) -->
+  <div style="background:var(--bg2); padding:40px 0; text-align:center; color:var(--muted); font-size:14px">
+    〜 課題・解決策・ボタン計測・業種別ユースケース・比較セクション（現状と同じ） 〜
+  </div>
+
+  <!-- ★ SETUP SECTION — 「自分で / おまかせ」2カラムに変更 ★ -->
+  <section style="background:var(--bg2)" data-comment-anchor="setup-section">
+    <div class="wrap">
+      <p class="eyebrow" style="text-align:center">セットアップ</p>
+      <h2>設定方法を選べます。</h2>
+      <p class="sub">GTM やLINE公式の操作に慣れている方はセルフサーブ、設定が不安な方はおまかせ設定（無料）をお選びください。</p>
+
+      <div class="setup-grid diff-new" data-comment-anchor="setup-choice-cards">
+        <!-- おまかせ -->
+        <div class="setup-card recommended" data-comment-anchor="setup-omakase">
+          <div style="text-align:center">
+            <div style="font-size:48px; margin-bottom:12px">🤝</div>
+            <h3>おまかせ設定</h3>
+            <div class="price">¥0</div>
+            <div class="price-unit">トライアル期間中無料</div>
+          </div>
+          <ul>
+            <li>アクセス権を渡すだけ（約5分）</li>
+            <li>Linetraceチームが全設定を代行</li>
+            <li>1〜2営業日で完了</li>
+            <li>技術的な知識は一切不要</li>
+            <li>完了後に権限削除OK</li>
+          </ul>
+          <a href="#" class="btn btn-primary" style="display:block; text-align:center; width:100%">おまかせで始める</a>
+        </div>
+
+        <!-- セルフサーブ -->
+        <div class="setup-card" data-comment-anchor="setup-self">
+          <div style="text-align:center">
+            <div style="font-size:48px; margin-bottom:12px">⚡</div>
+            <h3>自分で設定（セルフサーブ）</h3>
+            <div class="price">¥0</div>
+            <div class="price-unit">ドキュメント・チャットサポート付き</div>
+          </div>
+          <ul>
+            <li>GTMタグ1行 + Webhook URL設定</li>
+            <li>ダッシュボードの指示に従って10分</li>
+            <li>各ステップに手順ガイドあり</li>
+            <li>つまずいたらおまかせに切替可</li>
+          </ul>
+          <a href="#" class="btn btn-ghost" style="display:block; text-align:center; width:100%">自分で設定する</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- (料金セクションは現状と同じ想定) -->
+  <div style="padding:40px 0; text-align:center; color:var(--muted); font-size:14px">
+    〜 料金セクション（現状と同じ） 〜
+  </div>
+
+  <!-- ★ SUPPORT SECTION — Self-Serveを「おまかせ設定」に置き換え ★ -->
+  <section style="background:var(--bg2)" data-comment-anchor="support-section">
+    <div class="wrap">
+      <p class="eyebrow" style="text-align:center">導入サポート</p>
+      <h2>はじめての方も安心</h2>
+      <p class="sub">設定が不安な方向けに、無料のおまかせ設定をご用意。さらに手厚いサポートも選べます。</p>
+
+      <div class="support-grid diff-new" data-comment-anchor="support-cards">
+        <div class="scard sfeat" data-comment-anchor="support-omakase-card">
+          <span style="color:var(--brand-d); font-weight:700; font-size:13px; display:block; margin-bottom:6px">おすすめ</span>
+          <h3>おまかせ設定</h3>
+          <div class="syen">¥0</div>
+          <div class="syen-unit">トライアル期間中</div>
+          <ul>
+            <li>アクセス権を渡すだけ（約5分）</li>
+            <li>Webhook / GTM / CAPI 全設定代行</li>
+            <li>1〜2営業日で完了</li>
+            <li>完了後にメールでお知らせ</li>
+          </ul>
+          <a href="#" class="btn btn-primary" style="display:block; text-align:center">おまかせで始める</a>
+        </div>
+        <div class="scard">
+          <h3>キックオフサポート</h3>
+          <div class="syen">¥30,000<span class="syen-unit">（単発）</span></div>
+          <ul>
+            <li>60〜90 分のオンライン同行</li>
+            <li>GTM / Webhook / CAPI 一緒に設定</li>
+            <li>動作確認まで実施</li>
+          </ul>
+          <a href="#" class="btn btn-ghost" style="display:block; text-align:center">予約する</a>
+        </div>
+        <div class="scard">
+          <h3>初期設定代行プラン</h3>
+          <div class="syen">¥200,000<span class="syen-unit">（一括）</span></div>
+          <ul>
+            <li>全プラットフォーム設定を代行</li>
+            <li>テスト送信完了まで実施</li>
+            <li>引き継ぎドキュメント納品</li>
+            <li>30 日間メール質問受付</li>
+          </ul>
+          <a href="#" class="btn btn-ghost" style="display:block; text-align:center">お申込みする</a>
+        </div>
+      </div>
+      <p style="text-align:center; color:var(--muted); font-size:12px; margin-top:18px">※ 基本料金（¥10,000/月〜）とは別料金です（おまかせ設定は無料）。</p>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="final">
+    <div class="wrap">
+      <h2>LINE を跨いだ「真のコンバージョン」を、<br/>今すぐ計測しはじめる。</h2>
+      <p>クレジットカード登録不要、設定はおまかせ or セルフサーブ。<br/>2 週間後に継続するかしないか、それから決めてください。</p>
+      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap">
+        <a href="#" class="btn btn-primary">2 週間無料で試す</a>
+        <a href="#" class="btn btn-ghost" style="background:transparent; color:#fff; border-color:#21344c">資料をダウンロード</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Screen 2: LP - CURRENT (該当セクションのみ抜粋)
+     ══════════════════════════════════════════════════════════════ -->
+<div id="screen-lp-current" class="screen" data-screen-key="lp/current">
+  <header class="lp-nav"><div class="wrap">
+    <div class="logo">line<span>trace</span></div>
+    <div class="nav-cta">
+      <a href="#">ログイン</a>
+      <a href="#" class="cta">2週間無料で試す</a>
+    </div>
+  </div></header>
+
+  <div style="padding:40px 0; text-align:center; color:var(--muted); font-size:14px; background:linear-gradient(180deg, #f0fbf4 0%, #fff 70%)">
+    〜 ヒーロー・課題・解決策セクション（現状のまま） 〜
+  </div>
+
+  <!-- 現状のトラストストリップ（3列） -->
+  <section class="trust"><div class="wrap" style="grid-template-columns:repeat(3,1fr)">
+    <div class="t"><div style="font-size:24px; margin-bottom:6px">⏱️</div><strong>最短10分で計測スタート</strong><span>GTM 1 行・Webhook 設定だけ</span></div>
+    <div class="t"><div style="font-size:24px; margin-bottom:6px">💴</div><strong>月 ¥10,000〜・使った分だけ</strong><span>LINE公式アカウント数 + 広告アカウント数の従量課金</span></div>
+    <div class="t"><div style="font-size:24px; margin-bottom:6px">🎯</div><strong>クレカ不要で試せる</strong><span>2 週間無料トライアル</span></div>
+  </div></section>
+
+  <div style="padding:40px 0; text-align:center; color:var(--muted); font-size:14px">
+    〜 中略セクション 〜
+  </div>
+
+  <!-- 現状のセットアップセクション（3ステップ） -->
+  <section style="background:var(--bg2)"><div class="wrap">
+    <p class="eyebrow" style="text-align:center">セットアップ</p>
+    <h2>設定 10 分・エンジニア不要。</h2>
+    <p class="sub">GTM タグ 1 行と Webhook URL の設定だけ。ダッシュボードで完結する 3 ステップで導入完了します。</p>
+    <div class="grid3">
+      <div class="icard"><div class="step-num">1</div><h3>GTM タグを貼る</h3><p>linetrace.js を GTM のカスタム HTML タグで配信。1 行追加するだけ。</p></div>
+      <div class="icard"><div class="step-num">2</div><h3>Webhook URL を設定</h3><p>LINE 公式アカウントマネージャーに Linetrace の Webhook URL を入力。</p></div>
+      <div class="icard"><div class="step-num">3</div><h3>CAPI 設定して開始</h3><p>Meta / Google / Yahoo の Conversions API 連携を完了して計測開始。</p></div>
+    </div>
+  </div></section>
+
+  <div style="padding:40px 0; text-align:center; color:var(--muted); font-size:14px">
+    〜 料金セクション 〜
+  </div>
+
+  <!-- 現状の導入サポートセクション -->
+  <section style="background:var(--bg2)"><div class="wrap">
+    <p class="eyebrow" style="text-align:center">任意の導入サポート</p>
+    <h2>導入が不安な方へ</h2>
+    <p class="sub">「GTM タグ設置」「CAPI 接続」など計測 SaaS 特有の設定が初めての方向けに、任意でご利用いただける導入サポートをご用意しています。</p>
+    <div class="support-grid">
+      <div class="scard">
+        <h3>Self-Serve</h3>
+        <div class="syen">¥0</div>
+        <ul><li>ドキュメント・動画ガイド</li><li>ダッシュボード内チャットボット</li><li>2 週間無料トライアル</li></ul>
+        <a href="#" class="btn btn-ghost" style="display:block; text-align:center">無料トライアル開始</a>
+      </div>
+      <div class="scard sfeat">
+        <span style="color:var(--brand-d); font-weight:700; font-size:13px; display:block; margin-bottom:6px">推奨</span>
+        <h3>キックオフサポート</h3>
+        <div class="syen">¥30,000<span class="syen-unit">（単発）</span></div>
+        <ul><li>60〜90 分のオンライン同行</li><li>GTM / Webhook / CAPI 全部一緒に設定</li><li>動作確認まで実施</li></ul>
+        <a href="#" class="btn btn-primary" style="display:block; text-align:center">予約する</a>
+      </div>
+      <div class="scard">
+        <h3>初期設定代行プラン</h3>
+        <div class="syen">¥200,000<span class="syen-unit">（一括）</span></div>
+        <ul><li>全プラットフォーム設定を代行</li><li>テスト送信完了まで実施</li><li>引き継ぎドキュメント納品</li><li>30 日間メール質問受付</li></ul>
+        <a href="#" class="btn btn-ghost" style="display:block; text-align:center">お申込みする</a>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>LINE を跨いだ「真のコンバージョン」を、<br/>今すぐ計測しはじめる。</h2>
+      <p>クレジットカード登録不要、GTM タグ 1 行で 10 分で開始。</p>
+      <a href="#" class="btn btn-primary">2 週間無料で試す</a>
+    </div>
+  </section>
+</div>
+
+<!-- Comment System UI (same as PR-1 mock) -->
+<div id="name-dialog" class="name-dialog-overlay">
+  <div class="name-dialog">
+    <h3>名前を入力してください</h3>
+    <p>コメント投稿者として表示されます</p>
+    <input type="text" id="name-input" placeholder="例: 福田" autofocus>
+    <br><button onclick="saveName()">始める</button>
+  </div>
+</div>
+<div id="comment-mode-banner" class="comment-mode-banner">
+  <span>コメントモード: 要素をクリックしてコメント</span>
+  <button onclick="exitCommentMode()">キャンセル (Esc)</button>
+</div>
+<div id="comment-panel" class="comment-panel">
+  <div class="comment-panel-header">
+    <h3>コメント一覧 (<span id="comment-count">0</span>)</h3>
+    <div style="display:flex; gap:8px; align-items:center">
+      <button onclick="refreshComments()" style="background:none; border:none; cursor:pointer; font-size:16px">🔄</button>
+      <button onclick="togglePanel()" style="background:none; border:none; cursor:pointer; font-size:18px">✕</button>
+    </div>
+  </div>
+  <div class="comment-panel-body" id="comment-list">
+    <p style="color:#9ca3af; font-size:13px; text-align:center; padding:40px 0">コメントはまだありません。</p>
+  </div>
+</div>
+<div style="position:fixed; bottom:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; align-items:flex-end">
+  <button class="comment-fab" onclick="togglePanel()" style="width:42px; height:42px; font-size:16px">💬<span id="fab-badge" class="badge-count" style="display:none">0</span></button>
+  <button class="comment-fab" onclick="enterCommentMode()" style="background:#06c755; border-color:#06c755">+</button>
+</div>
+
+<script>
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.querySelectorAll('.screen-nav button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  window.scrollTo(0, 0);
+  renderPins();
+}
+
+const CONFIG = {
+  owner: 'tfukuda-git',
+  repo: 'linetrace-mock',
+  pat: localStorage.getItem('mock-github-pat') || '',
+  label: 'mock-comment',
+};
+let comments = [];
+let userName = localStorage.getItem('mock-commenter-name') || '';
+let commentMode = false;
+let panelOpen = false;
+let openPinId = null;
+let pollInterval = null;
+
+function checkPat() {
+  if (!CONFIG.pat) {
+    const pat = prompt('GitHub PAT を入力してください（初回のみ）:');
+    if (pat && pat.startsWith('github_pat_')) {
+      CONFIG.pat = pat;
+      localStorage.setItem('mock-github-pat', pat);
+      pollInterval = setInterval(refreshComments, 10000);
+      refreshComments();
+    }
+  }
+}
+function checkName() {
+  checkPat();
+  if (!userName) { document.getElementById('name-dialog').classList.add('open'); document.getElementById('name-input').focus(); }
+}
+function saveName() {
+  const val = document.getElementById('name-input').value.trim();
+  if (!val) return;
+  userName = val;
+  localStorage.setItem('mock-commenter-name', val);
+  document.getElementById('name-dialog').classList.remove('open');
+}
+function enterCommentMode() { checkName(); if (!userName) return; commentMode = true; document.body.classList.add('comment-mode'); document.getElementById('comment-mode-banner').classList.add('active'); document.getElementById('comment-panel').classList.remove('open'); panelOpen = false; }
+function exitCommentMode() { commentMode = false; document.body.classList.remove('comment-mode'); document.getElementById('comment-mode-banner').classList.remove('active'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') exitCommentMode(); });
+
+document.addEventListener('click', e => {
+  if (!commentMode) return;
+  if (e.target.closest('.comment-fab, .comment-panel, .comment-pin, .comment-popover, .comment-mode-banner, .name-dialog-overlay, .screen-nav')) return;
+  e.preventDefault(); e.stopPropagation();
+  const activeScreen = document.querySelector('.screen.active');
+  const screenKey = activeScreen?.dataset.screenKey || 'unknown';
+  const anchor = e.target.closest('[data-comment-anchor]');
+  const anchorId = anchor ? anchor.dataset.commentAnchor : null;
+  const rect = activeScreen.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+  const y = (e.clientY - rect.top + activeScreen.scrollTop);
+  const body = prompt('コメントを入力:');
+  if (!body || !body.trim()) { exitCommentMode(); return; }
+  const comment = { id: 'local-' + Date.now(), screenKey, anchor: anchorId, author: userName, body: body.trim(), replies: [], resolved: false, x: parseFloat(x), y, created: new Date().toISOString() };
+  comments.push(comment);
+  exitCommentMode(); renderPins(); renderPanel();
+  if (CONFIG.pat) saveToGitHub(comment); else saveToLocal();
+}, true);
+
+function togglePanel() { panelOpen = !panelOpen; document.getElementById('comment-panel').classList.toggle('open', panelOpen); if (panelOpen) renderPanel(); }
+function renderPanel() {
+  const list = document.getElementById('comment-list');
+  const unresolvedCount = comments.filter(c => !c.resolved).length;
+  document.getElementById('comment-count').textContent = unresolvedCount;
+  const badge = document.getElementById('fab-badge');
+  badge.textContent = unresolvedCount; badge.style.display = unresolvedCount > 0 ? 'flex' : 'none';
+  if (comments.length === 0) { list.innerHTML = '<p style="color:#9ca3af; font-size:13px; text-align:center; padding:40px 0">コメントはまだありません。</p>'; return; }
+  list.innerHTML = comments.filter(c => !c.resolved).map(c => `
+    <div class="comment-thread" onclick="jumpToComment('${c.id}')">
+      <div class="ct-screen">${c.screenKey} ${c.anchor ? '> ' + c.anchor : ''}</div>
+      <div><span class="ct-author">${c.author}</span><span class="ct-time">${new Date(c.created).toLocaleString('ja-JP', {month:'numeric',day:'numeric',hour:'numeric',minute:'numeric'})}</span></div>
+      <div class="ct-body">${escapeHtml(c.body)}</div>
+    </div>
+  `).join('');
+}
+function jumpToComment(id) {
+  const c = comments.find(x => x.id === id); if (!c) return;
+  const screenEl = document.querySelector('[data-screen-key="' + c.screenKey + '"]');
+  if (screenEl) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); screenEl.classList.add('active'); renderPins(); }
+  if (panelOpen) togglePanel();
+  setTimeout(() => { openPinId = id; renderPins(); const pin = document.querySelector('.comment-pin[data-id="' + id + '"]'); if (pin) pin.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+}
+function renderPins() {
+  document.querySelectorAll('.comment-pin, .comment-popover').forEach(el => el.remove());
+  const activeScreen = document.querySelector('.screen.active'); if (!activeScreen) return;
+  const screenKey = activeScreen.dataset.screenKey;
+  comments.filter(c => c.screenKey === screenKey && !c.resolved).forEach((c, i) => {
+    const pin = document.createElement('div'); pin.className = 'comment-pin'; pin.dataset.id = c.id; pin.textContent = i + 1;
+    pin.style.left = c.x + '%'; pin.style.top = c.y + 'px';
+    pin.onclick = e => { e.stopPropagation(); openPinId = openPinId === c.id ? null : c.id; renderPins(); };
+    activeScreen.style.position = 'relative'; activeScreen.appendChild(pin);
+    if (openPinId === c.id) {
+      const pop = document.createElement('div'); pop.className = 'comment-popover open';
+      pop.style.left = (c.x > 60 ? c.x - 30 : c.x + 3) + '%'; pop.style.top = (c.y + 36) + 'px'; pop.onclick = e => e.stopPropagation();
+      pop.innerHTML = `<div class="comment-popover-header"><span style="font-size:12px; color:#9ca3af">${c.screenKey}</span><button onclick="openPinId=null; renderPins()" style="background:none; border:none; cursor:pointer; font-size:14px">✕</button></div>
+        <div class="comment-popover-body"><div class="comment-msg"><div><span class="cm-author">${c.author}</span><span class="cm-time">${new Date(c.created).toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'numeric',minute:'numeric'})}</span></div><div class="cm-text">${escapeHtml(c.body)}</div></div>
+        ${c.replies.map(r => '<div class="comment-msg" style="padding-left:12px; border-left:2px solid #e5e7eb"><div><span class="cm-author">' + r.author + '</span></div><div class="cm-text">' + escapeHtml(r.body) + '</div></div>').join('')}</div>
+        <div class="comment-popover-footer"><div class="reply-box"><input type="text" placeholder="返信..." id="reply-${c.id}" onkeydown="if(event.key==='Enter')addReply('${c.id}')"><button onclick="addReply('${c.id}')">↩</button></div></div>`;
+      activeScreen.appendChild(pop);
+    }
+  });
+}
+function addReply(id) { const input = document.getElementById('reply-' + id); if (!input?.value.trim()) return; const c = comments.find(x => x.id === id); if (!c) return; c.replies.push({ author: userName, body: input.value.trim(), created: new Date().toISOString() }); saveToLocal(); renderPins(); renderPanel(); }
+function saveToLocal() { localStorage.setItem('linetrace-mock-comments-lp', JSON.stringify(comments)); }
+function loadFromLocal() { try { const s = localStorage.getItem('linetrace-mock-comments-lp'); if (s) comments = JSON.parse(s); } catch {} }
+async function saveToGitHub(comment) {
+  if (!CONFIG.pat) return;
+  const meta = { screenKey: comment.screenKey, anchor: comment.anchor, x: comment.x, y: comment.y };
+  try { await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/issues`, { method: 'POST', headers: { 'Authorization': `Bearer ${CONFIG.pat}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ title: `[${comment.screenKey}] ${comment.body.substring(0, 60)}`, body: `**@${comment.author}:** ${comment.body}\n\n<!-- mock-meta: ${JSON.stringify(meta)} -->`, labels: [CONFIG.label] }) }); } catch {}
+  saveToLocal();
+}
+async function refreshComments() {
+  if (!CONFIG.pat) { renderPanel(); return; }
+  try {
+    const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/issues?labels=${CONFIG.label}&state=all&per_page=100`, { headers: { 'Authorization': `Bearer ${CONFIG.pat}` } });
+    if (!res.ok) return;
+    const issues = await res.json();
+    const gh = [];
+    for (const issue of issues) {
+      const m = issue.body?.match(/<!-- mock-meta: ({.*?}) -->/); if (!m) continue;
+      const meta = JSON.parse(m[1]); const a = issue.body?.match(/^\*\*@(.+?):\*\* /);
+      gh.push({ id: 'gh-' + issue.number, screenKey: meta.screenKey, anchor: meta.anchor, author: a?.[1] || 'unknown', body: issue.body.replace(/^\*\*@.+?:\*\* /, '').replace(/\n\n<!-- mock-meta:.*-->/, '').trim(), replies: [], resolved: issue.state === 'closed', x: meta.x, y: meta.y, created: issue.created_at });
+    }
+    if (gh.length) { const local = comments.filter(c => c.id.startsWith('local-')); comments = [...gh, ...local]; saveToLocal(); }
+  } catch {} renderPanel(); renderPins();
+}
+function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+loadFromLocal(); renderPins(); renderPanel();
+if (CONFIG.pat) { pollInterval = setInterval(refreshComments, 10000); refreshComments(); }
+</script>
+</body>
+</html>
