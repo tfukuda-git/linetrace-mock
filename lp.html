@@ -3,580 +3,502 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Linetrace LP Mock - おまかせ設定訴求</title>
+<title>Linetrace LP モック（改訂版）</title>
 <style>
   :root {
     --ink: #0f1b2d; --ink2: #3a4a61; --muted: #6b7a8d;
     --line: #e4e9f0; --bg: #ffffff; --bg2: #f5f8fb;
-    --brand: #06c755; --brand-d: #04a847;
+    --brand: #06c755; --brand-d: #04a847; --accent: #1f6feb;
     --warn: #e8533f; --radius: 14px; --shadow: 0 6px 24px rgba(15,27,45,.08);
     --max: 1080px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif; color: var(--ink); background: var(--bg); line-height: 1.7; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.7; -webkit-font-smoothing: antialiased; }
   .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
-  section { padding: 72px 0; }
-  h2 { font-size: 30px; line-height: 1.3; margin: 0 0 14px; text-align: center; font-weight: 700; }
+  section { padding: 64px 0; }
+  h1, h2, h3, h4 { color: var(--ink); letter-spacing: -0.01em; font-weight: 700; }
+  h2 { font-size: 30px; line-height: 1.3; margin: 0 0 14px; text-align: center; }
   .eyebrow { color: var(--brand-d); font-weight: 800; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 12px; }
-  .sub { text-align: center; color: var(--muted); max-width: 640px; margin: 0 auto 44px; font-size: 16px; }
+  .sub { text-align: center; color: var(--muted); max-width: 660px; margin: 0 auto 44px; font-size: 16px; }
   .btn { display: inline-block; text-decoration: none; border-radius: 999px; font-weight: 700; padding: 14px 28px; font-size: 15px; cursor: pointer; border: 0; transition: all 0.15s; }
   .btn-primary { background: var(--brand); color: #fff !important; }
   .btn-primary:hover { background: var(--brand-d); transform: translateY(-1px); }
   .btn-ghost { background: #fff; color: var(--ink) !important; border: 1.5px solid var(--line); }
-  a { text-decoration: none; color: inherit; }
-
-  /* Screen Nav */
-  .screen-nav { position: sticky; top: 0; z-index: 100; background: #1e1e2e; color: #fff; display: flex; align-items: center; border-bottom: 2px solid #06c755; font-size: 13px; }
-  .screen-nav-label { padding: 10px 16px; font-weight: 700; color: #06c755; white-space: nowrap; border-right: 1px solid #333; }
-  .screen-nav button { padding: 10px 18px; background: none; border: none; color: #aaa; cursor: pointer; font-size: 13px; white-space: nowrap; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
-  .screen-nav button:hover { color: #fff; background: rgba(255,255,255,0.05); }
-  .screen-nav button.active { color: #fff; border-bottom-color: #06c755; font-weight: 600; }
-  .screen-nav .nav-spacer { flex: 1; }
-  .diff-badge { background: #f59e0b; color: #000; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 8px; margin-left: 6px; }
-
-  .screen { display: none; }
-  .screen.active { display: block; }
-
-  .diff-new { position: relative; }
-  .diff-new::before { content: 'NEW'; position: absolute; top: -8px; left: -8px; z-index: 10; background: #f59e0b; color: #000; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.15); }
 
   /* NAV */
-  header.lp-nav { position: sticky; top: 38px; z-index: 20; background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-  .lp-nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; }
+  header.nav { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; gap: 18px; }
   .logo { font-weight: 800; font-size: 22px; letter-spacing: -.02em; }
   .logo span { color: var(--brand); }
-  .nav-cta { display: flex; align-items: center; gap: 14px; font-size: 14px; }
-  .nav-cta a.cta { background: var(--brand); color: #fff; padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; }
+  .nav-links { display: flex; gap: 22px; font-size: 14px; }
+  .nav-links a { color: var(--ink2); text-decoration: none; font-weight: 600; }
+  .nav-cta { display: flex; align-items: center; gap: 14px; }
+  .login-link { color: var(--ink2); text-decoration: none; font-weight: 600; font-size: 14px; }
+  .nav a.cta { background: var(--brand); color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; }
 
   /* HERO */
-  .hero { padding: 80px 0 100px; background: linear-gradient(180deg, #f0fbf4 0%, #ffffff 70%); }
+  .hero { padding: 72px 0 88px; background: linear-gradient(180deg, #f0fbf4 0%, #ffffff 70%); }
   .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
-  .hero h1 { font-size: 44px; line-height: 1.25; letter-spacing: -.02em; margin: 0 0 18px; font-weight: 700; }
+  .hero h1 { font-size: 44px; line-height: 1.25; letter-spacing: -.02em; margin: 0 0 18px; }
   .lead { font-size: 18px; color: var(--ink2); margin: 0 0 28px; }
 
-  /* TRUST */
-  .trust { background: #0f1b2d; color: #dce6f2; padding: 0; }
-  .trust .wrap { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; }
-  .trust .t { padding: 26px 22px; text-align: center; border-right: 1px solid #21344c; }
-  .trust .t:last-child { border-right: 0; }
-  .trust .t strong { display: block; font-size: 16px; color: #fff; margin-bottom: 2px; }
-  .trust .t span { font-size: 13px; color: #9fb3cc; }
-
-  /* SETUP SECTION */
-  .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto; }
-  .setup-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; position: relative; }
-  .setup-card.recommended { border: 2px solid var(--brand); }
-  .setup-card.recommended::after { content: 'おすすめ'; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--brand); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 999px; }
-  .setup-card h3 { font-size: 20px; font-weight: 700; margin: 0 0 8px; }
-  .setup-card .price { font-size: 32px; font-weight: 800; margin: 8px 0 4px; }
-  .setup-card .price-unit { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
-  .setup-card ul { list-style: none; padding: 0; margin: 0 0 18px; font-size: 14px; color: var(--ink2); }
-  .setup-card li { padding: 6px 0; border-bottom: 1px dashed var(--line); }
-  .setup-card li::before { content: '✓ '; color: var(--brand); font-weight: 700; }
-
-  /* SUPPORT 3col */
-  .support-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; max-width: 1000px; margin: 0 auto; }
-  .scard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; text-align: center; }
-  .scard.sfeat { border: 2px solid var(--brand); }
-  .scard h3 { margin: 0 0 8px; font-size: 16px; }
-  .scard .syen { font-size: 24px; font-weight: 800; margin: 8px 0; }
-  .scard .syen-unit { color: var(--muted); font-size: 13px; }
-  .scard ul { list-style: none; padding: 0; margin: 14px 0; text-align: left; font-size: 13px; color: var(--ink2); }
-  .scard li::before { content: '・'; color: var(--brand); }
-
-  /* GRID 3 */
-  .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
-  .icard { border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; background: #fff; }
-  .icard .step-num { font-size: 48px; color: var(--brand); font-weight: 800; line-height: 1; margin-bottom: 8px; text-align: center; }
-  .icard h3 { margin: 0 0 6px; font-size: 17px; text-align: center; }
-  .icard p { margin: 0; color: var(--ink2); font-size: 14px; text-align: center; }
-
-  /* DEMO CARD */
-  .live-demo-card { background: #0f1b2d; border-radius: 18px; padding: 24px; color: #dce6f2; box-shadow: var(--shadow); }
+  /* HERO DEMO CARD — light theme (旧: 黒背景) */
+  .demo-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 24px; box-shadow: var(--shadow); }
+  .demo-head { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+  .demo-head .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--brand); animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+  .demo-title { font-size: 13px; color: var(--muted); font-weight: 700; letter-spacing: .04em; }
   .demo-stages { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-  .demo-stage-card { background: #1a2942; border-radius: 10px; padding: 12px; text-align: center; }
-  .demo-stage-card .day { font-size: 10px; color: #8aa0bb; letter-spacing: .06em; margin-bottom: 6px; }
-  .demo-stage-card .name { font-size: 11px; font-weight: 700; color: #fff; }
-  .demo-capi { background: #1a2942; border-radius: 10px; padding: 12px; margin-top: 12px; text-align: center; }
-  .demo-capi .label { font-size: 11px; color: #8aa0bb; margin-bottom: 6px; }
-  .demo-capi .platforms { display: flex; justify-content: center; gap: 10px; font-size: 12px; }
-  .demo-capi .platforms span { background: #0f1b2d; padding: 4px 10px; border-radius: 6px; }
+  .stage { background: #f5f8fb; border: 1px solid var(--line); border-radius: 10px; padding: 14px 8px; text-align: center; position: relative; }
+  .stage .nm { font-size: 12px; font-weight: 700; color: var(--ink); }
+  .stage .chk { position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; border-radius: 50%; background: var(--brand); color: #fff; display:flex; align-items:center; justify-content:center; font-size: 11px; opacity: 0; }
+  .stage.s0 { animation: hl 6s infinite; } .stage.s1 { animation: hl1 6s infinite; } .stage.s2 { animation: hl2 6s infinite; }
+  .stage.s0 .chk { animation: ck 6s infinite; } .stage.s1 .chk { animation: ck1 6s infinite; } .stage.s2 .chk { animation: ck2 6s infinite; }
+  @keyframes hl { 0%,8%{background:#f5f8fb;border-color:var(--line)} 14%,92%{background:#eafaf0;border-color:#bdeacb} 98%,100%{background:#f5f8fb} }
+  @keyframes hl1 { 0%,24%{background:#f5f8fb;border-color:var(--line)} 30%,92%{background:#eafaf0;border-color:#bdeacb} 98%,100%{background:#f5f8fb} }
+  @keyframes hl2 { 0%,42%{background:#f5f8fb;border-color:var(--line)} 48%,92%{background:#eafaf0;border-color:#bdeacb} 98%,100%{background:#f5f8fb} }
+  @keyframes ck { 0%,10%{opacity:0;transform:scale(0)} 15%,92%{opacity:1;transform:scale(1)} 98%,100%{opacity:0} }
+  @keyframes ck1 { 0%,26%{opacity:0;transform:scale(0)} 31%,92%{opacity:1;transform:scale(1)} 98%,100%{opacity:0} }
+  @keyframes ck2 { 0%,44%{opacity:0;transform:scale(0)} 49%,92%{opacity:1;transform:scale(1)} 98%,100%{opacity:0} }
+  .demo-arrow { text-align:center; color: var(--brand); font-size: 18px; font-weight:800; margin: 8px 0 2px; animation: arrowPulse 6s infinite; }
+  @keyframes arrowPulse { 0%,48%{opacity:.25;transform:translateY(-2px)} 54%,92%{opacity:1;transform:translateY(0)} 98%,100%{opacity:.25} }
+  .demo-capi { background: #f0fbf4; border: 1px solid #bdeacb; border-radius: 10px; padding: 14px; margin-top: 6px; text-align: center; }
+  .demo-capi .lbl { font-size: 12px; color: var(--brand-d); font-weight: 700; margin-bottom: 8px; }
+  .demo-capi .pf { display: flex; justify-content: center; gap: 8px; font-size: 12px; }
+  .demo-capi .pf span { background: #fff; border: 1px solid var(--line); padding: 6px 14px; border-radius: 6px; font-weight: 700; color: var(--ink2); }
+  .demo-capi .pf .p0 { animation: pf0 6s infinite; } .demo-capi .pf .p1 { animation: pf1 6s infinite; } .demo-capi .pf .p2 { animation: pf2 6s infinite; }
+  @keyframes pf0 { 0%,54%{background:#fff;color:var(--ink2);border-color:var(--line)} 60%,92%{background:var(--brand);color:#fff;border-color:var(--brand)} 98%,100%{background:#fff;color:var(--ink2)} }
+  @keyframes pf1 { 0%,60%{background:#fff;color:var(--ink2);border-color:var(--line)} 66%,92%{background:var(--brand);color:#fff;border-color:var(--brand)} 98%,100%{background:#fff;color:var(--ink2)} }
+  @keyframes pf2 { 0%,66%{background:#fff;color:var(--ink2);border-color:var(--line)} 72%,92%{background:var(--brand);color:#fff;border-color:var(--brand)} 98%,100%{background:#fff;color:var(--ink2)} }
+  /* solution illustration tile */
+  .cv-ill { width: 64px; height: 64px; border-radius: 14px; background: #eafaf0; display:flex; align-items:center; justify-content:center; margin-bottom: 14px; }
+  .cv-ill svg { width: 38px; height: 38px; }
 
-  /* FINAL CTA */
-  .final { background: #0f1b2d; color: #fff; text-align: center; }
-  .final h2 { color: #fff; font-size: 34px; }
-  .final p { color: #dce6f2; max-width: 640px; margin: 0 auto 28px; }
+  /* TRUST STRIP */
+  .trust { background: #0f1b2d; padding: 0; }
+  .trust .wrap { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; }
+  .trust .t { padding: 24px 20px; text-align: center; border-right: 1px solid #21344c; }
+  .trust .t:last-child { border-right: 0; }
+  .trust .t .tic { font-size: 22px; margin-bottom: 6px; }
+  .trust .t strong { display: block; font-size: 15px; color: #fff; margin-bottom: 2px; }
+  .trust .t span { font-size: 12px; color: #9fb3cc; }
 
-  /* Comment System */
-  .comment-fab { position: fixed; bottom: 24px; right: 24px; z-index: 1000; width: 48px; height: 48px; border-radius: 50%; background: #1e1e2e; color: #fff; border: 2px solid #06c755; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
-  .comment-fab:hover { transform: scale(1.1); }
-  .comment-fab .badge-count { position: absolute; top: -4px; right: -4px; background: #dc2626; color: #fff; font-size: 10px; font-weight: 700; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-  .comment-panel { position: fixed; top: 0; right: 0; bottom: 0; width: 380px; z-index: 999; background: #fff; box-shadow: -4px 0 24px rgba(0,0,0,0.15); transform: translateX(100%); transition: transform 0.25s; display: flex; flex-direction: column; }
-  .comment-panel.open { transform: translateX(0); }
-  .comment-panel-header { padding: 16px 20px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; }
-  .comment-panel-header h3 { font-size: 15px; font-weight: 700; }
-  .comment-panel-body { flex: 1; overflow-y: auto; padding: 16px; }
-  .comment-thread { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; margin-bottom: 12px; cursor: pointer; }
-  .comment-thread:hover { border-color: #06c755; }
-  .comment-thread .ct-screen { font-size: 10px; color: #9ca3af; margin-bottom: 4px; }
-  .comment-thread .ct-author { font-size: 12px; font-weight: 600; color: #374151; }
-  .comment-thread .ct-time { font-size: 10px; color: #9ca3af; margin-left: 6px; }
-  .comment-thread .ct-body { font-size: 13px; color: #4b5563; margin-top: 4px; line-height: 1.5; }
-  .comment-pin { position: absolute; z-index: 90; width: 28px; height: 28px; border-radius: 50%; background: #1e1e2e; color: #fff; border: 2px solid #06c755; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-  .comment-pin:hover { transform: scale(1.15); }
-  .comment-popover { position: absolute; z-index: 95; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); width: 320px; display: none; }
-  .comment-popover.open { display: block; }
-  .comment-popover-header { padding: 12px 16px; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; justify-content: space-between; }
-  .comment-popover-body { padding: 12px 16px; max-height: 240px; overflow-y: auto; }
-  .comment-popover-footer { padding: 12px 16px; border-top: 1px solid #e5e7eb; }
-  .comment-popover-footer .reply-box { display: flex; gap: 8px; }
-  .comment-popover-footer input { flex: 1; padding: 8px 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 13px; }
-  .comment-popover-footer button { background: #06c755; color: #fff; border: none; padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
-  .comment-msg { margin-bottom: 10px; }
-  .comment-msg .cm-author { font-weight: 600; color: #374151; font-size: 11px; }
-  .comment-msg .cm-time { color: #9ca3af; margin-left: 6px; font-size: 10px; }
-  .comment-msg .cm-text { font-size: 13px; color: #4b5563; line-height: 1.5; }
-  .comment-mode-banner { position: fixed; top: 42px; left: 50%; transform: translateX(-50%); z-index: 1001; background: #1e1e2e; color: #fff; padding: 8px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,0.3); display: none; align-items: center; gap: 12px; }
-  .comment-mode-banner.active { display: flex; }
-  .comment-mode-banner button { background: #dc2626; color: #fff; border: none; padding: 4px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; }
-  body.comment-mode, body.comment-mode * { cursor: crosshair !important; }
-  .name-dialog-overlay { position: fixed; inset: 0; z-index: 2000; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; }
-  .name-dialog-overlay.open { display: flex; }
-  .name-dialog { background: #fff; border-radius: 12px; padding: 32px; width: 380px; text-align: center; }
-  .name-dialog h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
-  .name-dialog p { font-size: 13px; color: #6b7a8d; margin-bottom: 20px; }
-  .name-dialog input { width: 100%; padding: 10px 14px; border: 2px solid #e5e7eb; border-radius: 8px; font-size: 15px; text-align: center; margin-bottom: 16px; }
-  .name-dialog input:focus { border-color: #06c755; outline: none; }
-  .name-dialog button { background: #06c755; color: #fff; border: none; padding: 10px 32px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; }
+  /* PROBLEM */
+  .issue-card { background: var(--bg2); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; max-width: 1000px; margin: 0 auto 36px; }
+  .issue-card h3 { margin: 0 0 14px; font-size: 20px; }
+  .issue-card .stages { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 16px 0; }
+  .issue-stage { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 18px 16px; }
+  .issue-stage .st { font-size: 11px; font-weight: 800; color: var(--brand-d); letter-spacing: .06em; margin-bottom: 8px; }
+  .issue-stage h4 { font-size: 17px; margin: 0 0 4px; }
+  .issue-stage .det { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .label-ng { display: inline-block; background: #ffe5e0; color: var(--warn); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
+  .issue-explainer { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-top: 8px; font-size: 14px; color: var(--ink2); }
+  .issue-warn { background: #fff4e5; border-left: 3px solid var(--warn); padding: 10px 14px; border-radius: 8px; margin-top: 14px; font-size: 14px; }
+  .ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: center; max-width: 760px; margin: 32px auto 0; }
+  .ba-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .ba-card h3 { margin: 0 0 10px; font-size: 15px; }
+  .ba-card .num { font-size: 28px; font-weight: 800; margin: 4px 0; }
+  .ba .gap { color: var(--warn); font-weight: 700; }
+  .ba .arrow { font-size: 26px; color: var(--brand); font-weight: 800; }
+  .ba-card.after { background: #f0fbf4; border-color: #bdeacb; }
+
+  /* 3 CV CARDS */
+  .cv-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 24px; }
+  .cv-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; background: #fff; display: flex; flex-direction: column; }
+  .cv-card h3 { margin: 0 0 8px; font-size: 18px; }
+  .cv-card p { margin: 0; color: var(--ink2); font-size: 14px; flex: 1; }
+  .cv-pill { display:inline-block; background:#eafaf0; color:var(--brand-d); font-size:12px; font-weight:700; padding:4px 12px; border-radius:999px; margin: 0 auto 22px; }
+
+  /* GRID3 / cards */
+  .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+  .icard { border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; background: #fff; display: flex; flex-direction: column; }
+  .icard .ico { width: 44px; height: 44px; border-radius: 11px; background: #eafaf0; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 12px; }
+  .icard h3 { margin: 0 0 6px; font-size: 17px; }
+  .icard p { margin: 0 0 14px; color: var(--ink2); font-size: 14px; flex: 1; }
+  .case-metric { margin-top: auto; padding-top: 14px; border-top: 1px dashed var(--line); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .metric-label { font-size: 11px; color: var(--muted); font-weight: 600; }
+  .metric-value { font-size: 13px; color: var(--ink2); }
+  .metric-value strong { color: var(--brand-d); font-size: 15px; }
+
+  /* VALUE vs competitor (旧 why-card) */
+  .value-card { max-width: 820px; margin: 0 auto; background: #f0fbf4; border: 1px solid #bdeacb; border-radius: var(--radius); padding: 32px; }
+  .value-card h3 { font-size: 21px; margin: 0 0 8px; text-align:center; }
+  .value-card .vsub { text-align:center; color: var(--ink2); font-size: 14px; margin-bottom: 20px; }
+  table.vt { width: 100%; border-collapse: collapse; background:#fff; border:1px solid var(--line); border-radius: 10px; overflow:hidden; }
+  table.vt th, table.vt td { padding: 12px 14px; text-align:center; border-bottom:1px solid var(--line); font-size: 14px; }
+  table.vt th { background: var(--bg2); font-size: 13px; color: var(--ink2); }
+  table.vt td:first-child, table.vt th:first-child { text-align:left; font-weight:600; }
+  table.vt .brand-col { background:#f0fbf4; font-weight:700; color: var(--brand-d); }
+
+  /* SETUP */
+  .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto; }
+  .setup-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; text-align: center; }
+  .setup-card .em { font-size: 44px; margin-bottom: 10px; }
+  .setup-card h3 { margin: 0 0 4px; font-size: 20px; }
+  .setup-card .price { font-size: 26px; font-weight: 800; margin: 6px 0 2px; }
+  .setup-card .note { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+  .setup-card ul { list-style: none; padding: 0; margin: 0 0 18px; font-size: 14px; color: var(--ink2); text-align: left; }
+  .setup-card li { padding: 6px 0; border-bottom: 1px dashed var(--line); }
+
+  /* PRICING */
+  .pgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; max-width: 700px; margin: 0 auto; }
+  .pcard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; text-align: center; }
+  .pcard h3 { margin: 0 0 4px; font-size: 18px; }
+  .pcard .yen { font-size: 32px; font-weight: 800; margin: 8px 0 2px; }
+  .pcard .unit { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+  .pcard ul { list-style: none; padding: 0; margin: 0 0 4px; text-align: left; font-size: 14px; color: var(--ink2); }
+  .pcard li { padding: 6px 0; border-bottom: 1px dashed var(--line); }
+  .pause-figure { max-width: 940px; margin: 36px auto 0; background:#fff; border:1px solid var(--line); border-radius: var(--radius); padding: 20px 16px; }
+
+  /* CASES */
+  .cases { background: var(--bg2); }
+  .case-item { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; display: grid; grid-template-columns: 170px 1fr; gap: 24px; margin-bottom: 18px; align-items: start; }
+  .case-item .who .wbadge { display: inline-block; background: #eafaf0; color: var(--brand-d); font-weight: 700; font-size: 12px; padding: 4px 10px; border-radius: 999px; margin-bottom: 8px; }
+  .case-item .who strong { display: block; font-size: 16px; margin-bottom: 4px; }
+  .case-item .who .meta { color: var(--muted); font-size: 13px; }
+  .case-item .body p { margin: 0 0 8px; font-size: 14px; color: var(--ink2); }
+  .case-item .body .clabel { font-weight: 700; color: var(--ink); font-size: 13px; }
+  .case-item .body .result { background: #f0fdf4; border-left: 3px solid var(--brand); padding: 10px 14px; border-radius: 8px; color: var(--ink2); font-size: 14px; margin-top: 6px; }
+
+  /* FAQ */
+  .faq-grid { max-width: 760px; margin: 0 auto; }
+  .faq-item { border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 12px; background: #fff; }
+  .faq-item summary { font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
+  .faq-item summary::after { content: '+'; font-size: 24px; color: var(--brand); }
+  .faq-item[open] summary::after { content: '\2212'; }
+  .faq-item p { margin: 14px 0 0; color: var(--ink2); font-size: 14px; }
+
+  /* FINAL CTA — 旧: 真っ黒。明るいブランド配色に */
+  .final { background: linear-gradient(135deg, #06c755, #04a847); color: #fff; text-align: center; }
+  .final h2 { color: #fff; font-size: 32px; }
+  .final p { color: #eafff2; max-width: 640px; margin: 0 auto 28px; }
+  .final .btn-primary { background: #fff; color: var(--brand-d) !important; }
+  .final .btn-ghost { background: transparent; color: #fff !important; border: 1.5px solid rgba(255,255,255,.7); }
+
+  footer { padding: 36px 0 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; text-align: center; }
+  footer a { color: var(--ink2); margin: 0 14px; text-decoration: none; }
 
   @media (max-width: 860px) {
-    .hero .wrap, .setup-grid, .grid3, .support-grid, .trust .wrap { grid-template-columns: 1fr; }
-    h1 { font-size: 32px !important; }
-    h2 { font-size: 24px; }
+    .hero .wrap, .grid3, .cv-grid, .pgrid, .setup-grid { grid-template-columns: 1fr; }
+    .trust .wrap { grid-template-columns: 1fr 1fr; }
+    .ba { grid-template-columns: 1fr; } .ba .arrow { transform: rotate(90deg); }
+    .case-item { grid-template-columns: 1fr; }
+    .issue-card .stages { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    h1 { font-size: 32px !important; } h2 { font-size: 24px; }
   }
 </style>
 </head>
 <body>
 
-<!-- Screen Nav -->
-<div class="screen-nav">
-  <div class="screen-nav-label">LP Mock</div>
-  <button class="active" onclick="showScreen('lp-proposed')">LP（提案）<span class="diff-badge">NEW</span></button>
-  <button onclick="showScreen('lp-current')">LP（現状）</button>
-  <div class="nav-spacer"></div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════
-     Screen 1: LP - PROPOSED
-     ══════════════════════════════════════════════════════════════ -->
-<div id="screen-lp-proposed" class="screen active" data-screen-key="lp/proposed">
-  <header class="lp-nav"><div class="wrap">
-    <div class="logo">line<span>trace</span></div>
-    <div class="nav-cta">
-      <a href="#">ログイン</a>
-      <a href="#" class="cta">2週間無料で試す</a>
-    </div>
-  </div></header>
-
-  <!-- HERO -->
-  <section class="hero"><div class="wrap">
-    <div>
-      <h1>LINEで消えていたCVを、<br/>広告に返す。</h1>
-      <p class="lead">
-        友だち追加・LINE内CV・LINE経由Web CV — 3つのCVを Meta・Google・Yahoo に Conversions API で自動返却。<br/>
-        GTM タグ 1 行・10 分で導入。
-      </p>
-      <a href="#" class="btn btn-primary">2週間無料で試す</a>
-      <div style="margin-top:10px; font-size:13px; color:var(--muted)">クレジットカード登録不要 / 設定 10 分</div>
-    </div>
-    <div class="live-demo-card">
-      <div style="font-size:13px; color:#9fb3cc; font-weight:700; margin-bottom:18px">3 つの CV を広告に返却</div>
-      <div class="demo-stages">
-        <div class="demo-stage-card"><div class="day">DAY 0</div><div style="font-size:24px; margin:4px 0 6px">💬</div><div class="name">友だち追加 CV</div></div>
-        <div class="demo-stage-card"><div class="day">DAY 1</div><div style="font-size:24px; margin:4px 0 6px">📝</div><div class="name">LINE 内 CV</div></div>
-        <div class="demo-stage-card"><div class="day">DAY 3</div><div style="font-size:24px; margin:4px 0 6px">🛒</div><div class="name">LINE 経由 Web CV</div></div>
-      </div>
-      <div class="demo-capi">
-        <div class="label">Conversions API で送信</div>
-        <div class="platforms"><span>Meta</span><span>Google</span><span>Yahoo</span></div>
-      </div>
-    </div>
-  </div></section>
-
-  <!-- ★ TRUST STRIP — 4列に変更、「設定代行0円」追加 ★ -->
-  <section class="trust diff-new" data-comment-anchor="trust-strip"><div class="wrap">
-    <div class="t"><div style="font-size:24px; margin-bottom:6px">⏱️</div><strong>最短10分で計測スタート</strong><span>GTM 1 行・Webhook 設定だけ</span></div>
-    <div class="t"><div style="font-size:24px; margin-bottom:6px">🤝</div><strong>設定代行 0円</strong><span>権限を渡すだけ・こちらで全設定</span></div>
-    <div class="t"><div style="font-size:24px; margin-bottom:6px">💴</div><strong>月 ¥10,000〜</strong><span>LINE公式 + 広告アカウント数の従量課金</span></div>
-    <div class="t"><div style="font-size:24px; margin-bottom:6px">🎯</div><strong>クレカ不要で試せる</strong><span>2 週間無料トライアル</span></div>
-  </div></section>
-
-  <!-- (中略: 課題・解決策セクションは現状と同じ想定、ここではセットアップとサポートのみモック) -->
-  <div style="background:var(--bg2); padding:40px 0; text-align:center; color:var(--muted); font-size:14px">
-    〜 課題・解決策・ボタン計測・業種別ユースケース・比較セクション（現状と同じ） 〜
+<!-- HEADER -->
+<header class="nav"><div class="wrap">
+  <div class="logo">line<span>trace</span></div>
+  <nav class="nav-links">
+    <a href="#problem">課題</a><a href="#solution">解決策</a><a href="#comparison">比較</a><a href="#price">料金</a><a href="#faq">FAQ</a><a href="#">ブログ</a>
+  </nav>
+  <div class="nav-cta">
+    <a href="#" class="login-link">ログイン</a>
+    <a href="#" class="cta">2週間無料で試す</a>
   </div>
+</div></header>
 
-  <!-- ★ SETUP SECTION — 「自分で / おまかせ」2カラムに変更 ★ -->
-  <section style="background:var(--bg2)" data-comment-anchor="setup-section">
-    <div class="wrap">
-      <p class="eyebrow" style="text-align:center">セットアップ</p>
-      <h2>設定方法を選べます。</h2>
-      <p class="sub">GTM やLINE公式の操作に慣れている方はセルフサーブ、設定が不安な方はおまかせ設定（無料）をお選びください。</p>
-
-      <div class="setup-grid diff-new" data-comment-anchor="setup-choice-cards">
-        <!-- おまかせ -->
-        <div class="setup-card recommended" data-comment-anchor="setup-omakase">
-          <div style="text-align:center">
-            <div style="font-size:48px; margin-bottom:12px">🤝</div>
-            <h3>おまかせ設定</h3>
-            <div class="price">¥0</div>
-            <div class="price-unit">トライアル期間中無料</div>
-          </div>
-          <ul>
-            <li>アクセス権を渡すだけ（約5分）</li>
-            <li>Linetraceチームが全設定を代行</li>
-            <li>1〜2営業日で完了</li>
-            <li>技術的な知識は一切不要</li>
-            <li>完了後に権限削除OK</li>
-          </ul>
-          <a href="#" class="btn btn-primary" style="display:block; text-align:center; width:100%">おまかせで始める</a>
-        </div>
-
-        <!-- セルフサーブ -->
-        <div class="setup-card" data-comment-anchor="setup-self">
-          <div style="text-align:center">
-            <div style="font-size:48px; margin-bottom:12px">⚡</div>
-            <h3>自分で設定（セルフサーブ）</h3>
-            <div class="price">¥0</div>
-            <div class="price-unit">ドキュメント・チャットサポート付き</div>
-          </div>
-          <ul>
-            <li>GTMタグ1行 + Webhook URL設定</li>
-            <li>ダッシュボードの指示に従って10分</li>
-            <li>各ステップに手順ガイドあり</li>
-            <li>つまずいたらおまかせに切替可</li>
-          </ul>
-          <a href="#" class="btn btn-ghost" style="display:block; text-align:center; width:100%">自分で設定する</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- (料金セクションは現状と同じ想定) -->
-  <div style="padding:40px 0; text-align:center; color:var(--muted); font-size:14px">
-    〜 料金セクション（現状と同じ） 〜
+<!-- 1. HERO -->
+<section class="hero"><div class="wrap">
+  <div>
+    <h1>LINEで消えていたCVを、<br>広告に返す。</h1>
+    <p class="lead">友だち追加・LINE内CV・LINE経由Web CV — 3 つの CV を Meta・Google・Yahoo に Conversions API で自動返却。<br>GTM タグ 1 行・10 分で導入。</p>
+    <a href="#" class="btn btn-primary">2週間無料で試す</a>
+    <div style="margin-top:10px;font-size:13px;color:var(--muted)">クレジットカード登録不要 / 設定 10 分</div>
   </div>
-
-  <!-- ★ SUPPORT SECTION — Self-Serveを「おまかせ設定」に置き換え ★ -->
-  <section style="background:var(--bg2)" data-comment-anchor="support-section">
-    <div class="wrap">
-      <p class="eyebrow" style="text-align:center">導入サポート</p>
-      <h2>はじめての方も安心</h2>
-      <p class="sub">設定が不安な方向けに、無料のおまかせ設定をご用意。さらに手厚いサポートも選べます。</p>
-
-      <div class="support-grid diff-new" data-comment-anchor="support-cards">
-        <div class="scard sfeat" data-comment-anchor="support-omakase-card">
-          <span style="color:var(--brand-d); font-weight:700; font-size:13px; display:block; margin-bottom:6px">おすすめ</span>
-          <h3>おまかせ設定</h3>
-          <div class="syen">¥0</div>
-          <div class="syen-unit">トライアル期間中</div>
-          <ul>
-            <li>アクセス権を渡すだけ（約5分）</li>
-            <li>Webhook / GTM / CAPI 全設定代行</li>
-            <li>1〜2営業日で完了</li>
-            <li>完了後にメールでお知らせ</li>
-          </ul>
-          <a href="#" class="btn btn-primary" style="display:block; text-align:center">おまかせで始める</a>
-        </div>
-        <div class="scard">
-          <h3>キックオフサポート</h3>
-          <div class="syen">¥30,000<span class="syen-unit">（単発）</span></div>
-          <ul>
-            <li>60〜90 分のオンライン同行</li>
-            <li>GTM / Webhook / CAPI 一緒に設定</li>
-            <li>動作確認まで実施</li>
-          </ul>
-          <a href="#" class="btn btn-ghost" style="display:block; text-align:center">予約する</a>
-        </div>
-        <div class="scard">
-          <h3>初期設定代行プラン</h3>
-          <div class="syen">¥200,000<span class="syen-unit">（一括）</span></div>
-          <ul>
-            <li>全プラットフォーム設定を代行</li>
-            <li>テスト送信完了まで実施</li>
-            <li>引き継ぎドキュメント納品</li>
-            <li>30 日間メール質問受付</li>
-          </ul>
-          <a href="#" class="btn btn-ghost" style="display:block; text-align:center">お申込みする</a>
-        </div>
-      </div>
-      <p style="text-align:center; color:var(--muted); font-size:12px; margin-top:18px">※ 基本料金（¥10,000/月〜）とは別料金です（おまかせ設定は無料）。</p>
+  <!-- 明るい白カードに変更 -->
+  <div class="demo-card">
+    <div class="demo-head"><span class="dot"></span><span class="demo-title">LINEのCVを、広告最適化に使えます。</span></div>
+    <div class="demo-stages">
+      <div class="stage s0"><div class="chk">&#10003;</div><div class="nm">友だち追加 CV</div></div>
+      <div class="stage s1"><div class="chk">&#10003;</div><div class="nm">LINE 内 CV</div></div>
+      <div class="stage s2"><div class="chk">&#10003;</div><div class="nm">LINE 経由 Web CV</div></div>
     </div>
-  </section>
-
-  <!-- FINAL CTA -->
-  <section class="final">
-    <div class="wrap">
-      <h2>LINE を跨いだ「真のコンバージョン」を、<br/>今すぐ計測しはじめる。</h2>
-      <p>クレジットカード登録不要、設定はおまかせ or セルフサーブ。<br/>2 週間後に継続するかしないか、それから決めてください。</p>
-      <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap">
-        <a href="#" class="btn btn-primary">2 週間無料で試す</a>
-        <a href="#" class="btn btn-ghost" style="background:transparent; color:#fff; border-color:#21344c">資料をダウンロード</a>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════
-     Screen 2: LP - CURRENT (該当セクションのみ抜粋)
-     ══════════════════════════════════════════════════════════════ -->
-<div id="screen-lp-current" class="screen" data-screen-key="lp/current">
-  <header class="lp-nav"><div class="wrap">
-    <div class="logo">line<span>trace</span></div>
-    <div class="nav-cta">
-      <a href="#">ログイン</a>
-      <a href="#" class="cta">2週間無料で試す</a>
-    </div>
-  </div></header>
-
-  <div style="padding:40px 0; text-align:center; color:var(--muted); font-size:14px; background:linear-gradient(180deg, #f0fbf4 0%, #fff 70%)">
-    〜 ヒーロー・課題・解決策セクション（現状のまま） 〜
-  </div>
-
-  <!-- 現状のトラストストリップ（3列） -->
-  <section class="trust"><div class="wrap" style="grid-template-columns:repeat(3,1fr)">
-    <div class="t"><div style="font-size:24px; margin-bottom:6px">⏱️</div><strong>最短10分で計測スタート</strong><span>GTM 1 行・Webhook 設定だけ</span></div>
-    <div class="t"><div style="font-size:24px; margin-bottom:6px">💴</div><strong>月 ¥10,000〜・使った分だけ</strong><span>LINE公式アカウント数 + 広告アカウント数の従量課金</span></div>
-    <div class="t"><div style="font-size:24px; margin-bottom:6px">🎯</div><strong>クレカ不要で試せる</strong><span>2 週間無料トライアル</span></div>
-  </div></section>
-
-  <div style="padding:40px 0; text-align:center; color:var(--muted); font-size:14px">
-    〜 中略セクション 〜
-  </div>
-
-  <!-- 現状のセットアップセクション（3ステップ） -->
-  <section style="background:var(--bg2)"><div class="wrap">
-    <p class="eyebrow" style="text-align:center">セットアップ</p>
-    <h2>設定 10 分・エンジニア不要。</h2>
-    <p class="sub">GTM タグ 1 行と Webhook URL の設定だけ。ダッシュボードで完結する 3 ステップで導入完了します。</p>
-    <div class="grid3">
-      <div class="icard"><div class="step-num">1</div><h3>GTM タグを貼る</h3><p>linetrace.js を GTM のカスタム HTML タグで配信。1 行追加するだけ。</p></div>
-      <div class="icard"><div class="step-num">2</div><h3>Webhook URL を設定</h3><p>LINE 公式アカウントマネージャーに Linetrace の Webhook URL を入力。</p></div>
-      <div class="icard"><div class="step-num">3</div><h3>CAPI 設定して開始</h3><p>Meta / Google / Yahoo の Conversions API 連携を完了して計測開始。</p></div>
-    </div>
-  </div></section>
-
-  <div style="padding:40px 0; text-align:center; color:var(--muted); font-size:14px">
-    〜 料金セクション 〜
-  </div>
-
-  <!-- 現状の導入サポートセクション -->
-  <section style="background:var(--bg2)"><div class="wrap">
-    <p class="eyebrow" style="text-align:center">任意の導入サポート</p>
-    <h2>導入が不安な方へ</h2>
-    <p class="sub">「GTM タグ設置」「CAPI 接続」など計測 SaaS 特有の設定が初めての方向けに、任意でご利用いただける導入サポートをご用意しています。</p>
-    <div class="support-grid">
-      <div class="scard">
-        <h3>Self-Serve</h3>
-        <div class="syen">¥0</div>
-        <ul><li>ドキュメント・動画ガイド</li><li>ダッシュボード内チャットボット</li><li>2 週間無料トライアル</li></ul>
-        <a href="#" class="btn btn-ghost" style="display:block; text-align:center">無料トライアル開始</a>
-      </div>
-      <div class="scard sfeat">
-        <span style="color:var(--brand-d); font-weight:700; font-size:13px; display:block; margin-bottom:6px">推奨</span>
-        <h3>キックオフサポート</h3>
-        <div class="syen">¥30,000<span class="syen-unit">（単発）</span></div>
-        <ul><li>60〜90 分のオンライン同行</li><li>GTM / Webhook / CAPI 全部一緒に設定</li><li>動作確認まで実施</li></ul>
-        <a href="#" class="btn btn-primary" style="display:block; text-align:center">予約する</a>
-      </div>
-      <div class="scard">
-        <h3>初期設定代行プラン</h3>
-        <div class="syen">¥200,000<span class="syen-unit">（一括）</span></div>
-        <ul><li>全プラットフォーム設定を代行</li><li>テスト送信完了まで実施</li><li>引き継ぎドキュメント納品</li><li>30 日間メール質問受付</li></ul>
-        <a href="#" class="btn btn-ghost" style="display:block; text-align:center">お申込みする</a>
-      </div>
-    </div>
-  </div></section>
-
-  <section class="final">
-    <div class="wrap">
-      <h2>LINE を跨いだ「真のコンバージョン」を、<br/>今すぐ計測しはじめる。</h2>
-      <p>クレジットカード登録不要、GTM タグ 1 行で 10 分で開始。</p>
-      <a href="#" class="btn btn-primary">2 週間無料で試す</a>
-    </div>
-  </section>
-</div>
-
-<!-- Comment System UI (same as PR-1 mock) -->
-<div id="name-dialog" class="name-dialog-overlay">
-  <div class="name-dialog">
-    <h3>名前を入力してください</h3>
-    <p>コメント投稿者として表示されます</p>
-    <input type="text" id="name-input" placeholder="例: 福田" autofocus>
-    <br><button onclick="saveName()">始める</button>
-  </div>
-</div>
-<div id="comment-mode-banner" class="comment-mode-banner">
-  <span>コメントモード: 要素をクリックしてコメント</span>
-  <button onclick="exitCommentMode()">キャンセル (Esc)</button>
-</div>
-<div id="comment-panel" class="comment-panel">
-  <div class="comment-panel-header">
-    <h3>コメント一覧 (<span id="comment-count">0</span>)</h3>
-    <div style="display:flex; gap:8px; align-items:center">
-      <button onclick="refreshComments()" style="background:none; border:none; cursor:pointer; font-size:16px">🔄</button>
-      <button onclick="togglePanel()" style="background:none; border:none; cursor:pointer; font-size:18px">✕</button>
+    <div class="demo-arrow">&#8595;　Conversions API で広告最適化へ</div>
+    <div class="demo-capi">
+      <div class="lbl">各媒体の自動入札に CV を返却</div>
+      <div class="pf"><span class="p0">Meta</span><span class="p1">Google</span><span class="p2">Yahoo</span></div>
     </div>
   </div>
-  <div class="comment-panel-body" id="comment-list">
-    <p style="color:#9ca3af; font-size:13px; text-align:center; padding:40px 0">コメントはまだありません。</p>
+</div></section>
+
+<!-- 2. TRUST STRIP -->
+<section class="trust"><div class="wrap">
+  <div class="t"><div class="tic">&#9201;&#65039;</div><strong>最短10分で計測スタート</strong><span>GTM 1 行・Webhook 設定だけ</span></div>
+  <div class="t"><div class="tic">&#129309;</div><strong>設定は2通りから選べる</strong><span>自分で設定 / おまかせ代行（無料）</span></div>
+  <div class="t"><div class="tic">&#128180;</div><strong>月 &#165;10,000〜</strong><span>LINE公式 + 広告アカウント数の従量課金</span></div>
+  <div class="t"><div class="tic">&#127919;</div><strong>クレカ不要で試せる</strong><span>2 週間無料トライアル</span></div>
+</div></section>
+
+<!-- 3. PROBLEM -->
+<section id="problem"><div class="wrap">
+  <p class="eyebrow" style="text-align:center">よくある課題</p>
+  <h2>LINE 経由のコンバージョン、<br>広告に返せていますか？</h2>
+  <p class="sub">計測ツールを入れていない状態では、<strong style="color:var(--ink)">友だち追加もその後の LINE 内アクションも、LINE 経由の Web 購入も、どれも広告に返っていません</strong>。これが多くのアカウントで起きている計測ロスです。</p>
+
+  <div class="issue-card">
+    <h3>ツール未導入だと、ここが全部ロスになる</h3>
+    <div class="stages">
+      <div class="issue-stage"><div class="st">STEP 1</div><h4>友だち追加</h4><div class="det">広告 &rarr; LP &rarr; LINE 友だち追加</div><span class="label-ng">&#10005; 広告に返らない</span></div>
+      <div class="issue-stage"><div class="st">STEP 2</div><h4>LINE 内アクション</h4><div class="det">フォーム回答・リッチメニュータップ</div><span class="label-ng">&#10005; 広告に返らない</span></div>
+      <div class="issue-stage"><div class="st">STEP 3</div><h4>Web で購入・予約</h4><div class="det">LINE 経由で Web &rarr; 購入・予約・問い合わせ</div><span class="label-ng">&#10005; 広告に返らない</span></div>
+    </div>
+    <div class="issue-explainer">
+      <strong>なぜ計測ロスが起きるのか</strong><br>
+      広告 &rarr; LP までは追えても、<strong>LINE を挟んだ瞬間にセッションが切れる</strong>からです。LINE アプリ内ブラウザは LP で保存した Cookie（広告クリック ID）を引き継がないため、友だち追加やその後のアクションが「どの広告から来たか」と繋がらず、広告側に何も返せません。
+    </div>
+    <div class="issue-warn">結果、広告の AI（自動入札）が「本当に買ってくれるユーザー」を学習できず、配信最適化が止まり、CPA が高騰します。</div>
   </div>
-</div>
-<div style="position:fixed; bottom:24px; right:24px; z-index:1000; display:flex; flex-direction:column; gap:10px; align-items:flex-end">
-  <button class="comment-fab" onclick="togglePanel()" style="width:42px; height:42px; font-size:16px">💬<span id="fab-badge" class="badge-count" style="display:none">0</span></button>
-  <button class="comment-fab" onclick="enterCommentMode()" style="background:#06c755; border-color:#06c755">+</button>
-</div>
+
+  <div class="ba">
+    <div class="ba-card">
+      <h3>Before：説明できない</h3>
+      <p>媒体CV <span class="num">500</span></p>
+      <p>LINE実追加 <span class="num gap">120</span></p>
+      <p style="color:var(--warn);font-weight:700;margin-top:6px;font-size:13px">&rarr; 乖離で最適化も説明も不能</p>
+    </div>
+    <div class="arrow">&rarr;</div>
+    <div class="ba-card after">
+      <h3>After：実測できる</h3>
+      <p>媒体CV <span class="num">500</span></p>
+      <p>LINE実追加 <span class="num" style="color:var(--brand-d)">480</span></p>
+      <p style="color:var(--brand-d);font-weight:700;margin-top:6px;font-size:13px">&rarr; CAPI連携で誤差解消・説明可能</p>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:12px;color:var(--muted);margin-top:18px">&#8251; 媒体CV「500」は広告媒体がクリックベースで数えた件数。実際の友だち追加（120）とズレるのはこのため。数値は典型例。</p>
+</div></section>
+
+<!-- 4. SOLUTION（DAY・アイコン・バッジを削除、3イベント対等） -->
+<section id="solution" style="background:var(--bg2)"><div class="wrap">
+  <p class="eyebrow" style="text-align:center">解決策</p>
+  <h2>3 つのコンバージョンを、<br>まとめて広告に返します</h2>
+  <p class="sub" style="margin-bottom:18px">友だち追加 / LINE 内 CV / LINE 経由 Web CV — どれも<strong style="color:var(--ink)">独立したイベント</strong>として Meta・Google・Yahoo に Conversions API で送信。3 つすべてに対応します。</p>
+  <div style="text-align:center"><span class="cv-pill">3 つのイベント、すべて対応</span></div>
+  <div class="cv-grid">
+    <div class="cv-card">
+      <div class="cv-ill" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <circle cx="19" cy="17" r="7" fill="#06c755"/>
+          <path d="M7 39c0-7 5.4-12 12-12s12 5 12 12" fill="#06c755"/>
+          <circle cx="37" cy="13" r="9" fill="#fff" stroke="#06c755" stroke-width="2.5"/>
+          <path d="M37 9v8M33 13h8" stroke="#06c755" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>友だち追加 CV</h3>
+      <p>LIFF や認証画面を経由せず、Cookie で広告クリック ID（gclid / fbclid / yclid）を保持。実追加数とのズレを抑えて CAPI 送信。</p>
+    </div>
+    <div class="cv-card">
+      <div class="cv-ill" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <path d="M9 9h30a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H22l-9 7v-7h-4a3 3 0 0 1-3-3V12a3 3 0 0 1 3-3z" fill="#06c755"/>
+          <path d="M16 20l5 5 9-9" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3>LINE 内 CV</h3>
+      <p>LINE 内でのフォーム回答完了・リッチメニュー導線などのアクションを CV としてキャッチ。キーワードやクイックリプライで設定。</p>
+    </div>
+    <div class="cv-card">
+      <div class="cv-ill" aria-hidden="true">
+        <svg viewBox="0 0 48 48" fill="none">
+          <rect x="6" y="9" width="36" height="26" rx="3" fill="#06c755"/>
+          <rect x="6" y="9" width="36" height="7" rx="3" fill="#04a847"/>
+          <circle cx="11" cy="12.5" r="1.3" fill="#fff"/><circle cx="15" cy="12.5" r="1.3" fill="#fff"/>
+          <path d="M17 26l5 5 10-11" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M24 38v4M18 42h12" stroke="#06c755" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>LINE 経由 Web CV</h3>
+      <p>LINE から Web に戻った後の購入・予約・問い合わせを、元の広告クリックに紐付けて返却。LINE を跨いだアトリビューションが成立。</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- 5. 独自機能（簡素化・CDN/コード削除） -->
+<section><div class="wrap">
+  <p class="eyebrow" style="text-align:center">独自機能</p>
+  <h2>LP のボタンごとに、<br>どれが効いたかが分かる。</h2>
+  <p class="sub">FV・中段・フッター・スマホのバナー — どのボタン経由の友だち追加かを自動で集計。複数 LP なら「ページ別 &#215; ボタン別」でも見られます。</p>
+  <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px">
+    <h4 style="margin:0 0 4px;font-size:15px">ボタン別 友だち追加数</h4>
+    <div style="margin-bottom:14px;font-size:12px;color:var(--muted)">サイト：example.com / 直近 7 日</div>
+    <div class="bar-row" data-n="footer_cta" data-c="23" data-p="90"></div>
+    <div class="bar-row" data-n="floating_banner" data-c="12" data-p="52"></div>
+    <div class="bar-row" data-n="hero_cta" data-c="8" data-p="35"></div>
+    <div class="bar-row" data-n="sidebar" data-c="3" data-p="13"></div>
+  </div>
+</div></section>
+
+<!-- 6. COMPARISON（「Linetraceだけが」→「同等機能・低価格」へ） -->
+<section id="comparison" style="background:var(--bg2)"><div class="wrap">
+  <p class="eyebrow" style="text-align:center">比較</p>
+  <h2>対応が限られる計測まで、<br>もっと安く。</h2>
+  <p class="sub">CAPI 送信はもちろん、一般的な計測ツールでは対応が限られる「ボタン別計測」や「3 つの CV」にも対応。それでいて月額 ¥10,000〜から始められます。</p>
+  <div class="value-card">
+    <table class="vt">
+      <thead><tr><th>項目</th><th>一般的な計測ツール</th><th class="brand-col">Linetrace</th></tr></thead>
+      <tbody>
+        <tr><td>Meta / Google / Yahoo CAPI 送信</td><td>&#9675;</td><td class="brand-col">&#9675;</td></tr>
+        <tr><td>LP 内ボタン別の計測</td><td style="color:#c79a3a">&#9651;</td><td class="brand-col">&#9675;</td></tr>
+        <tr><td>3 つの CV（追加 / LINE内 / LINE経由Web）</td><td style="color:#c79a3a">&#9651;</td><td class="brand-col">&#9675;</td></tr>
+        <tr><td>月額基本料金</td><td>¥25,000〜50,000</td><td class="brand-col">¥10,000〜</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center">&#8251; 一般的な LINE 計測ツールの公開情報に基づく比較（2026年時点）。詳細はブログの比較記事をご覧ください。</p>
+  </div>
+</div></section>
+
+<!-- 7. SETUP（おすすめ廃止・同列） -->
+<section><div class="wrap">
+  <p class="eyebrow" style="text-align:center">セットアップ</p>
+  <h2>設定方法を選べます。</h2>
+  <p class="sub">GTM や LINE 公式の操作に慣れている方はセルフサーブ、設定が不安な方はおまかせ設定（無料）。どちらも料金は同じです。</p>
+  <div class="setup-grid">
+    <div class="setup-card">
+      <div class="em">&#9889;</div>
+      <h3>自分で設定（セルフサーブ）</h3>
+      <div class="price">&#165;0</div>
+      <div class="note">ドキュメント・チャットサポート付き</div>
+      <ul>
+        <li>&#10003; GTMタグ1行 + Webhook URL設定</li>
+        <li>&#10003; ダッシュボードの指示に従って10分</li>
+        <li>&#10003; 各ステップに手順ガイドあり</li>
+        <li>&#10003; つまずいたらおまかせに切替可</li>
+      </ul>
+      <a href="#" class="btn btn-primary" style="display:block;width:100%">自分で設定する</a>
+    </div>
+    <div class="setup-card">
+      <div class="em">&#129309;</div>
+      <h3>おまかせ設定</h3>
+      <div class="price">&#165;0</div>
+      <div class="note">トライアル期間中無料</div>
+      <ul>
+        <li>&#10003; アクセス権を渡すだけ（約5分）</li>
+        <li>&#10003; Linetraceチームが全設定を代行</li>
+        <li>&#10003; 1〜2営業日で完了</li>
+        <li>&#10003; 技術的な知識は一切不要</li>
+      </ul>
+      <a href="#" class="btn btn-primary" style="display:block;width:100%">おまかせで始める</a>
+    </div>
+  </div>
+</div></section>
+
+<!-- 8. PRICING（おすすめ廃止・両カード対等 + 一時停止図解） -->
+<section id="price" style="background:var(--bg2)"><div class="wrap">
+  <p class="eyebrow" style="text-align:center">料金</p>
+  <h2>使った分だけ。シンプルな従量課金。</h2>
+  <p class="sub">CV 件数による課金なし。LINE 公式アカウント数と広告アカウント連携数だけで決まる明朗会計です。</p>
+  <div class="pgrid">
+    <div class="pcard">
+      <h3>基本料金</h3>
+      <div class="yen">&#165;10,000<span style="font-size:14px">/月・1 LINE公式アカウント</span></div>
+      <div class="unit">LINE 公式アカウントの友だち追加計測</div>
+      <ul>
+        <li>&#10003; 3 つの CV すべて対応</li>
+        <li>&#10003; LP 内ボタン単位の計測</li>
+        <li>&#10003; LINE 内 CV 計測</li>
+        <li>&#10003; 2 週間無料トライアル</li>
+      </ul>
+    </div>
+    <div class="pcard">
+      <h3>広告アカウント連携</h3>
+      <div class="yen">&#165;3,000<span style="font-size:14px">/月・1 アカウント</span></div>
+      <div class="unit">Meta / Google / Yahoo CAPI 自動送信</div>
+      <ul>
+        <li>&#10003; Meta Conversions API</li>
+        <li>&#10003; Google Measurement Protocol</li>
+        <li>&#10003; Yahoo 広告 CAPI（SS / YDA）</li>
+        <li>&#10003; 連携ごとに一時停止／再開（停止月は課金対象外）</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 一時停止図解 差し込み -->
+  <div class="pause-figure">
+    <svg viewBox="0 0 920 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="pt pd" style="width:100%;height:auto" font-family="-apple-system, 'Noto Sans JP', sans-serif">
+      <title id="pt">媒体ごとに使う月だけ広告アカウント連携できる仕組みの図</title>
+      <desc id="pd">Metaは通年で連携、GoogleとYahooは年2回の繁忙期だけ連携し、それ以外の月は停止して課金なし。基本料金は別途。</desc>
+      <text x="24" y="38" font-size="20" font-weight="700" fill="#111827">広告アカウント連携は、使う月だけ。</text>
+      <text x="24" y="62" font-size="13" fill="#6b7280">媒体ごとに、使う月だけONにできます。連携中の媒体だけ ¥3,000/月。停止した月は課金なし。</text>
+      <rect x="690" y="26" width="13" height="13" rx="3" fill="#06c755"/><text x="709" y="37" font-size="12" fill="#374151">連携中</text>
+      <rect x="690" y="48" width="13" height="13" rx="3" fill="#eef1f4" stroke="#e5e7eb"/><text x="709" y="59" font-size="12" fill="#6b7280">停止（¥0）</text>
+      <text x="375" y="86" font-size="11" font-weight="600" fill="#06c755" text-anchor="middle">繁忙期①（春）</text>
+      <text x="747" y="86" font-size="11" font-weight="600" fill="#06c755" text-anchor="middle">繁忙期②（秋）</text>
+      <g font-size="12" fill="#9ca3af" text-anchor="middle">
+        <text x="189" y="104">1月</text><text x="251" y="104">2月</text><text x="313" y="104">3月</text><text x="375" y="104">4月</text><text x="437" y="104">5月</text><text x="499" y="104">6月</text>
+        <text x="561" y="104">7月</text><text x="623" y="104">8月</text><text x="685" y="104">9月</text><text x="747" y="104">10月</text><text x="809" y="104">11月</text><text x="871" y="104">12月</text>
+      </g>
+      <text x="24" y="135" font-size="13" font-weight="600" fill="#111827">Meta連携</text>
+      <rect x="160" y="114" width="740" height="38" rx="9" fill="#06c755"/>
+      <text x="530" y="138" font-size="13" font-weight="700" fill="#fff" text-anchor="middle" letter-spacing="1">←　連携（通年）　→</text>
+      <text x="24" y="183" font-size="13" font-weight="600" fill="#111827">Google連携</text>
+      <rect x="160" y="162" width="120" height="38" rx="9" fill="#eef1f4" stroke="#e5e7eb"/><text x="220" y="186" font-size="12" fill="#9aa3af" text-anchor="middle">←　停止　→</text>
+      <rect x="284" y="162" width="182" height="38" rx="9" fill="#06c755"/><text x="375" y="186" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">←　連携　→</text>
+      <rect x="470" y="162" width="182" height="38" rx="9" fill="#eef1f4" stroke="#e5e7eb"/><text x="561" y="186" font-size="12" fill="#9aa3af" text-anchor="middle">←　停止　→</text>
+      <rect x="656" y="162" width="182" height="38" rx="9" fill="#06c755"/><text x="747" y="186" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">←　連携　→</text>
+      <rect x="842" y="162" width="58" height="38" rx="9" fill="#eef1f4" stroke="#e5e7eb"/><text x="871" y="186" font-size="11" fill="#9aa3af" text-anchor="middle">停止</text>
+      <text x="24" y="231" font-size="13" font-weight="600" fill="#111827">Yahoo連携</text>
+      <rect x="160" y="210" width="120" height="38" rx="9" fill="#eef1f4" stroke="#e5e7eb"/><text x="220" y="234" font-size="12" fill="#9aa3af" text-anchor="middle">←　停止　→</text>
+      <rect x="284" y="210" width="182" height="38" rx="9" fill="#06c755"/><text x="375" y="234" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">←　連携　→</text>
+      <rect x="470" y="210" width="182" height="38" rx="9" fill="#eef1f4" stroke="#e5e7eb"/><text x="561" y="234" font-size="12" fill="#9aa3af" text-anchor="middle">←　停止　→</text>
+      <rect x="656" y="210" width="182" height="38" rx="9" fill="#06c755"/><text x="747" y="234" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">←　連携　→</text>
+      <rect x="842" y="210" width="58" height="38" rx="9" fill="#eef1f4" stroke="#e5e7eb"/><text x="871" y="234" font-size="11" fill="#9aa3af" text-anchor="middle">停止</text>
+      <line x1="24" y1="266" x2="896" y2="266" stroke="#e5e7eb"/>
+      <text x="24" y="300" font-size="13" font-weight="600" fill="#111827">基本料金</text>
+      <rect x="160" y="278" width="740" height="38" rx="9" fill="#f0faf0" stroke="#bbf7d0"/>
+      <text x="530" y="302" font-size="13" font-weight="600" fill="#166534" text-anchor="middle">¥10,000 / 月（LINE公式アカウント 1つ分）</text>
+      <text x="24" y="344" font-size="11" fill="#9ca3af">※ 停止中も計測とダッシュボード閲覧は続きます。広告連携をすべて止めても、基本料金は発生します。</text>
+    </svg>
+  </div>
+
+  <div style="text-align:center;margin-top:24px">
+    <a href="#" class="btn btn-primary" style="display:inline-block;font-size:16px;padding:14px 40px">2 週間無料で試す</a>
+    <p style="color:var(--muted);font-size:12px;margin-top:10px">例：LINE公式 1 つ + Meta 1 媒体 = &#165;13,000/月</p>
+    <p style="color:var(--muted);font-size:12px;margin-top:4px">季節・商材で広告アカウントが変わる運用は、<strong style="color:var(--ink2)">使う月だけ連携</strong>。オフシーズンは停止すれば、その月は基本料金 &#165;10,000 のみ。</p>
+  </div>
+</div></section>
+
+<!-- 9. FAQ -->
+<section id="faq"><div class="wrap">
+  <p class="eyebrow" style="text-align:center">FAQ</p>
+  <h2>よくあるご質問</h2>
+  <div class="faq-grid">
+    <details class="faq-item"><summary>使わない月の広告アカウント連携費はどうなりますか？</summary><p>ダッシュボードから広告アカウント連携ごとに一時停止できます。停止中はその連携の CAPI 送信が止まり、その月の連携費（¥3,000）は課金対象外になります（計測・ダッシュボード閲覧は継続）。基本料金 ¥10,000 は契約中は継続します。繁忙期だけ連携し、オフシーズンは停止する、といった季節運用に対応しています。</p></details>
+    <details class="faq-item"><summary>既存の Meta Pixel・GA4 はそのままで使えますか？</summary><p>はい。独立したカスタムイベントとして送信するため、既存の計測数値を汚さず、広告の機械学習用データだけを安全に追加できます。</p></details>
+    <details class="faq-item"><summary>既存の LINE 拡張ツール（エルメ・Lステップ等）と併用できますか？</summary><p>はい、併用可能です。Linetrace は計測専用ツールで、Webhook を中継して既存ツールに転送する設計です。</p></details>
+    <details class="faq-item"><summary>導入にどのくらい時間がかかりますか？</summary><p>自分で設定する場合は最短 10 分。設定に不安があれば「おまかせ設定（無料）」をお選びください。</p></details>
+  </div>
+</div></section>
+
+<!-- 10. FINAL CTA（黒をやめて明るく） -->
+<section class="final"><div class="wrap">
+  <h2>LINE を跨いだ「真のコンバージョン」を、<br>今すぐ計測しはじめる。</h2>
+  <p>クレジットカード登録不要、GTM タグ 1 行で 10 分で開始。<br>2 週間後に継続するかどうか、それから決めてください。</p>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <a href="#" class="btn btn-primary">2 週間無料で試す</a>
+    <a href="#comparison" class="btn btn-ghost">他社との違いを見る</a>
+  </div>
+</div></section>
+
+<footer>
+  <a href="#">プライバシーポリシー</a><a href="#">利用規約</a><a href="#">特定商取引法に基づく表記</a><a href="#">ブログ</a><a href="#">お問い合わせ</a>
+  <p style="margin-top:14px">&copy; 2026 Linetrace</p>
+</footer>
 
 <script>
-function showScreen(name) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
-  document.querySelectorAll('.screen-nav button').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  window.scrollTo(0, 0);
-  renderPins();
-}
-
-const CONFIG = {
-  owner: 'tfukuda-git',
-  repo: 'linetrace-mock',
-  pat: localStorage.getItem('mock-github-pat') || '',
-  label: 'mock-comment',
-};
-let comments = [];
-let userName = localStorage.getItem('mock-commenter-name') || '';
-let commentMode = false;
-let panelOpen = false;
-let openPinId = null;
-let pollInterval = null;
-
-function checkPat() {
-  if (!CONFIG.pat) {
-    const pat = prompt('GitHub PAT を入力してください（初回のみ）:');
-    if (pat && pat.startsWith('github_pat_')) {
-      CONFIG.pat = pat;
-      localStorage.setItem('mock-github-pat', pat);
-      pollInterval = setInterval(refreshComments, 10000);
-      refreshComments();
-    }
-  }
-}
-function checkName() {
-  checkPat();
-  if (!userName) { document.getElementById('name-dialog').classList.add('open'); document.getElementById('name-input').focus(); }
-}
-function saveName() {
-  const val = document.getElementById('name-input').value.trim();
-  if (!val) return;
-  userName = val;
-  localStorage.setItem('mock-commenter-name', val);
-  document.getElementById('name-dialog').classList.remove('open');
-}
-function enterCommentMode() { checkName(); if (!userName) return; commentMode = true; document.body.classList.add('comment-mode'); document.getElementById('comment-mode-banner').classList.add('active'); document.getElementById('comment-panel').classList.remove('open'); panelOpen = false; }
-function exitCommentMode() { commentMode = false; document.body.classList.remove('comment-mode'); document.getElementById('comment-mode-banner').classList.remove('active'); }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') exitCommentMode(); });
-
-document.addEventListener('click', e => {
-  if (!commentMode) return;
-  if (e.target.closest('.comment-fab, .comment-panel, .comment-pin, .comment-popover, .comment-mode-banner, .name-dialog-overlay, .screen-nav')) return;
-  e.preventDefault(); e.stopPropagation();
-  const activeScreen = document.querySelector('.screen.active');
-  const screenKey = activeScreen?.dataset.screenKey || 'unknown';
-  const anchor = e.target.closest('[data-comment-anchor]');
-  const anchorId = anchor ? anchor.dataset.commentAnchor : null;
-  const rect = activeScreen.getBoundingClientRect();
-  const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
-  const y = (e.clientY - rect.top + activeScreen.scrollTop);
-  const body = prompt('コメントを入力:');
-  if (!body || !body.trim()) { exitCommentMode(); return; }
-  const comment = { id: 'local-' + Date.now(), screenKey, anchor: anchorId, author: userName, body: body.trim(), replies: [], resolved: false, x: parseFloat(x), y, created: new Date().toISOString() };
-  comments.push(comment);
-  exitCommentMode(); renderPins(); renderPanel();
-  if (CONFIG.pat) saveToGitHub(comment); else saveToLocal();
-}, true);
-
-function togglePanel() { panelOpen = !panelOpen; document.getElementById('comment-panel').classList.toggle('open', panelOpen); if (panelOpen) renderPanel(); }
-function renderPanel() {
-  const list = document.getElementById('comment-list');
-  const unresolvedCount = comments.filter(c => !c.resolved).length;
-  document.getElementById('comment-count').textContent = unresolvedCount;
-  const badge = document.getElementById('fab-badge');
-  badge.textContent = unresolvedCount; badge.style.display = unresolvedCount > 0 ? 'flex' : 'none';
-  if (comments.length === 0) { list.innerHTML = '<p style="color:#9ca3af; font-size:13px; text-align:center; padding:40px 0">コメントはまだありません。</p>'; return; }
-  list.innerHTML = comments.filter(c => !c.resolved).map(c => `
-    <div class="comment-thread" onclick="jumpToComment('${c.id}')">
-      <div class="ct-screen">${c.screenKey} ${c.anchor ? '> ' + c.anchor : ''}</div>
-      <div><span class="ct-author">${c.author}</span><span class="ct-time">${new Date(c.created).toLocaleString('ja-JP', {month:'numeric',day:'numeric',hour:'numeric',minute:'numeric'})}</span></div>
-      <div class="ct-body">${escapeHtml(c.body)}</div>
-    </div>
-  `).join('');
-}
-function jumpToComment(id) {
-  const c = comments.find(x => x.id === id); if (!c) return;
-  const screenEl = document.querySelector('[data-screen-key="' + c.screenKey + '"]');
-  if (screenEl) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); screenEl.classList.add('active'); renderPins(); }
-  if (panelOpen) togglePanel();
-  setTimeout(() => { openPinId = id; renderPins(); const pin = document.querySelector('.comment-pin[data-id="' + id + '"]'); if (pin) pin.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
-}
-function renderPins() {
-  document.querySelectorAll('.comment-pin, .comment-popover').forEach(el => el.remove());
-  const activeScreen = document.querySelector('.screen.active'); if (!activeScreen) return;
-  const screenKey = activeScreen.dataset.screenKey;
-  comments.filter(c => c.screenKey === screenKey && !c.resolved).forEach((c, i) => {
-    const pin = document.createElement('div'); pin.className = 'comment-pin'; pin.dataset.id = c.id; pin.textContent = i + 1;
-    pin.style.left = c.x + '%'; pin.style.top = c.y + 'px';
-    pin.onclick = e => { e.stopPropagation(); openPinId = openPinId === c.id ? null : c.id; renderPins(); };
-    activeScreen.style.position = 'relative'; activeScreen.appendChild(pin);
-    if (openPinId === c.id) {
-      const pop = document.createElement('div'); pop.className = 'comment-popover open';
-      pop.style.left = (c.x > 60 ? c.x - 30 : c.x + 3) + '%'; pop.style.top = (c.y + 36) + 'px'; pop.onclick = e => e.stopPropagation();
-      pop.innerHTML = `<div class="comment-popover-header"><span style="font-size:12px; color:#9ca3af">${c.screenKey}</span><button onclick="openPinId=null; renderPins()" style="background:none; border:none; cursor:pointer; font-size:14px">✕</button></div>
-        <div class="comment-popover-body"><div class="comment-msg"><div><span class="cm-author">${c.author}</span><span class="cm-time">${new Date(c.created).toLocaleString('ja-JP',{month:'numeric',day:'numeric',hour:'numeric',minute:'numeric'})}</span></div><div class="cm-text">${escapeHtml(c.body)}</div></div>
-        ${c.replies.map(r => '<div class="comment-msg" style="padding-left:12px; border-left:2px solid #e5e7eb"><div><span class="cm-author">' + r.author + '</span></div><div class="cm-text">' + escapeHtml(r.body) + '</div></div>').join('')}</div>
-        <div class="comment-popover-footer"><div class="reply-box"><input type="text" placeholder="返信..." id="reply-${c.id}" onkeydown="if(event.key==='Enter')addReply('${c.id}')"><button onclick="addReply('${c.id}')">↩</button></div></div>`;
-      activeScreen.appendChild(pop);
-    }
+  // ボタン別バーの描画（独自機能セクション）
+  document.querySelectorAll('.bar-row').forEach(function(el){
+    var n = el.dataset.n, c = el.dataset.c, p = el.dataset.p;
+    el.style.cssText = 'display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px';
+    el.innerHTML = '<span style="width:120px">'+n+'</span>'+
+      '<div style="flex:1;background:#eef4f8;border-radius:999px;height:10px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#06c755,#33d17a);width:'+p+'%"></div></div>'+
+      '<span style="width:30px;text-align:right;font-weight:700">'+c+'</span>';
   });
-}
-function addReply(id) { const input = document.getElementById('reply-' + id); if (!input?.value.trim()) return; const c = comments.find(x => x.id === id); if (!c) return; c.replies.push({ author: userName, body: input.value.trim(), created: new Date().toISOString() }); saveToLocal(); renderPins(); renderPanel(); }
-function saveToLocal() { localStorage.setItem('linetrace-mock-comments-lp', JSON.stringify(comments)); }
-function loadFromLocal() { try { const s = localStorage.getItem('linetrace-mock-comments-lp'); if (s) comments = JSON.parse(s); } catch {} }
-async function saveToGitHub(comment) {
-  if (!CONFIG.pat) return;
-  const meta = { screenKey: comment.screenKey, anchor: comment.anchor, x: comment.x, y: comment.y };
-  try { await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/issues`, { method: 'POST', headers: { 'Authorization': `Bearer ${CONFIG.pat}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ title: `[${comment.screenKey}] ${comment.body.substring(0, 60)}`, body: `**@${comment.author}:** ${comment.body}\n\n<!-- mock-meta: ${JSON.stringify(meta)} -->`, labels: [CONFIG.label] }) }); } catch {}
-  saveToLocal();
-}
-async function refreshComments() {
-  if (!CONFIG.pat) { renderPanel(); return; }
-  try {
-    const res = await fetch(`https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/issues?labels=${CONFIG.label}&state=all&per_page=100`, { headers: { 'Authorization': `Bearer ${CONFIG.pat}` } });
-    if (!res.ok) return;
-    const issues = await res.json();
-    const gh = [];
-    for (const issue of issues) {
-      const m = issue.body?.match(/<!-- mock-meta: ({.*?}) -->/); if (!m) continue;
-      const meta = JSON.parse(m[1]); const a = issue.body?.match(/^\*\*@(.+?):\*\* /);
-      gh.push({ id: 'gh-' + issue.number, screenKey: meta.screenKey, anchor: meta.anchor, author: a?.[1] || 'unknown', body: issue.body.replace(/^\*\*@.+?:\*\* /, '').replace(/\n\n<!-- mock-meta:.*-->/, '').trim(), replies: [], resolved: issue.state === 'closed', x: meta.x, y: meta.y, created: issue.created_at });
-    }
-    if (gh.length) { const local = comments.filter(c => c.id.startsWith('local-')); comments = [...gh, ...local]; saveToLocal(); }
-  } catch {} renderPanel(); renderPins();
-}
-function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-loadFromLocal(); renderPins(); renderPanel();
-if (CONFIG.pat) { pollInterval = setInterval(refreshComments, 10000); refreshComments(); }
 </script>
 </body>
 </html>
