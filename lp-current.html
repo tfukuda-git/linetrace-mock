@@ -1,0 +1,365 @@
+<!DOCTYPE html><html lang="ja"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/webpack-031f1d41bebaa59b.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc"/><script src="/_next/static/chunks/05b565b6-55957988ac43212d.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc" async=""></script><script src="/_next/static/chunks/9614-e7de1a5a120d7d3c.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc" async=""></script><script src="/_next/static/chunks/main-app-25dab04420bd2d4f.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc" async=""></script><script src="/_next/static/chunks/app/landing/page-e8d0a3011d45e253.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc" async=""></script><script src="/_next/static/chunks/app/layout-76077e645da79ef9.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc" async=""></script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><title>Linetrace — LINEで消えていたCVを、広告に返す。</title><meta name="description" content="友だち追加・LINE内CV・LINE経由Web CV を Meta・Google・Yahoo に Conversions API で自動返却。GTM タグ 1 行・10 分で導入できる代理店・事業会社向け LINE マーケティング計測 SaaS。"/><meta name="keywords" content="LINE 計測,CAPI,Conversions API,友だち追加,LINE 内 CV,LINE 経由 Web CV,アトリビューション,代理店,広告運用,Meta,Google,Yahoo"/><meta property="og:title" content="Linetrace — LINEで消えていたCVを、広告に返す。"/><meta property="og:description" content="友だち追加・LINE内CV・LINE経由Web CV を Meta・Google・Yahoo に自動返却。"/><meta property="og:url" content="https://linetrace.io"/><meta property="og:image" content="https://linetrace.io/og-image.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Linetrace — LINEで消えていたCVを、広告に返す。"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Linetrace — LINEで消えていたCVを、広告に返す。"/><meta name="twitter:description" content="友だち追加・LINE内CV・LINE経由Web CV を Meta・Google・Yahoo に自動返却。"/><meta name="twitter:image" content="https://linetrace.io/og-image.png"/><link rel="icon" href="/favicon.svg"/><link rel="apple-touch-icon" href="/favicon.svg"/><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PXJPF9GH');</script><script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "wdhbgao4nw");</script><script src="/_next/static/chunks/polyfills-42372ed130431b0a.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc" noModule=""></script></head><body style="font-family:&#x27;Noto Sans JP&#x27;, system-ui, -apple-system, sans-serif;margin:0;padding:0;background-color:#f5f5f5;font-size:16px;line-height:1.7;word-break:keep-all;overflow-wrap:anywhere;-webkit-text-size-adjust:100%;overflow-x:hidden"><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PXJPF9GH" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><!--$!--><template data-dgst="BAILOUT_TO_CLIENT_SIDE_RENDERING"></template><!--/$--><!--$!--><template data-dgst="BAILOUT_TO_CLIENT_SIDE_RENDERING"></template><!--/$--><!--$--><!--/$--><!--$--><!--/$--><style>
+  :root {
+    --ink: #0f1b2d; --ink2: #3a4a61; --muted: #6b7a8d;
+    --line: #e4e9f0; --bg: #ffffff; --bg2: #f5f8fb;
+    --brand: #06c755; --brand-d: #04a847; --accent: #1f6feb;
+    --warn: #e8533f; --ok: #06c755; --live: #ff3b30;
+    --radius: 14px; --shadow: 0 6px 24px rgba(15,27,45,.08);
+    --max: 1080px;
+    --meta-blue: #0866FF; --google-blue: #4285F4; --yahoo-red: #FF0033;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, &quot;Hiragino Kaku Gothic ProN&quot;, &quot;Noto Sans JP&quot;, Meiryo, sans-serif;
+    color: var(--ink); background: var(--bg); line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  section { padding: 72px 0; }
+  h1, h2, h3, h4 { color: var(--ink); letter-spacing: -0.01em; font-weight: 700; }
+  h2 { font-size: 30px; line-height: 1.3; margin: 0 0 14px; text-align: center; }
+
+  .eyebrow {
+    color: var(--brand-d); font-weight: 800; font-size: 13px;
+    letter-spacing: .08em; text-transform: uppercase; margin: 0 0 12px;
+  }
+  .sub {
+    text-align: center; color: var(--muted); max-width: 640px;
+    margin: 0 auto 44px; font-size: 16px;
+  }
+  .btn {
+    display: inline-block; text-decoration: none; border-radius: 999px;
+    font-weight: 700; padding: 14px 28px; font-size: 15px;
+    cursor: pointer; border: 0; transition: all 0.15s;
+  }
+  .btn-primary { background: var(--brand); color: #fff !important; }
+  .btn-primary:hover { background: var(--brand-d); transform: translateY(-1px); }
+  .btn-ghost { background: #fff; color: var(--ink) !important; border: 1.5px solid var(--line); }
+  .btn-ghost:hover { border-color: var(--ink2); }
+
+  /* Campaign Banner */
+  .campaign-banner {
+    background: linear-gradient(135deg, #ea580c, #dc2626);
+    color: #fff; padding: 10px 16px; text-align: center; font-size: 14px;
+  }
+  .campaign-banner strong { font-size: 15px; display: inline-block; margin-right: 8px; }
+  .campaign-banner a {
+    background: #fff; color: #ea580c; text-decoration: none;
+    padding: 6px 14px; border-radius: 999px; font-weight: 700; font-size: 13px; margin-left: 12px;
+  }
+
+  /* NAV */
+  header.nav {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(255,255,255,.95); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 62px; gap: 18px;
+  }
+  .logo { font-weight: 800; font-size: 22px; letter-spacing: -.02em; }
+  .logo span { color: var(--brand); }
+  .nav-links { display: flex; gap: 22px; font-size: 14px; }
+  .nav-links a { color: var(--ink2); text-decoration: none; font-weight: 600; }
+  .nav-cta { display: flex; align-items: center; gap: 14px; }
+  .login-link { color: var(--ink2); text-decoration: none; font-weight: 600; font-size: 14px; }
+  .nav a.cta {
+    background: var(--brand); color: #fff; text-decoration: none;
+    padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px;
+  }
+
+  /* HERO */
+  .hero { padding: 80px 0 100px; background: linear-gradient(180deg, #f0fbf4 0%, #ffffff 70%); }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+  .hero h1 { font-size: 44px; line-height: 1.25; letter-spacing: -.02em; margin: 0 0 18px; }
+  .lead { font-size: 18px; color: var(--ink2); margin: 0 0 28px; }
+
+  /* LIVE DEMO card */
+  .live-demo-card {
+    background: #0f1b2d; border-radius: 18px; padding: 24px;
+    color: #dce6f2; box-shadow: var(--shadow);
+  }
+  .demo-head { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+  .live-dot {
+    display: inline-block; width: 10px; height: 10px; border-radius: 50%;
+    background: var(--live); animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.35} }
+  .demo-title { font-size: 13px; color: #9fb3cc; font-weight: 700; letter-spacing: .06em; }
+  .demo-stages { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .demo-stage-card {
+    background: #1a2942; border-radius: 10px; padding: 12px;
+    text-align: center; position: relative;
+  }
+  .demo-stage-card .day { font-size: 10px; color: #8aa0bb; letter-spacing: .06em; margin-bottom: 6px; }
+  .demo-stage-card .ic { font-size: 24px; margin: 4px 0 6px; }
+  .demo-stage-card .name { font-size: 11px; font-weight: 700; color: #fff; }
+  .demo-stage-card .check {
+    position: absolute; top: 6px; right: 6px; background: #06c755; color: #fff;
+    width: 18px; height: 18px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 11px;
+  }
+  .demo-capi { background: #1a2942; border-radius: 10px; padding: 12px; margin-top: 12px; text-align: center; }
+  .demo-capi .label { font-size: 11px; color: #8aa0bb; margin-bottom: 6px; }
+  .demo-capi .platforms { display: flex; justify-content: center; gap: 10px; font-size: 12px; }
+  .demo-capi .platforms span { background: #0f1b2d; padding: 4px 10px; border-radius: 6px; }
+
+  /* Animated demo cards */
+  .demo-stage-card.c0 { animation: c0Anim 6s infinite; }
+  .demo-stage-card.c1 { animation: c1Anim 6s infinite; }
+  .demo-stage-card.c3 { animation: c3Anim 6s infinite; }
+  .demo-stage-card.c0 .check { animation: check0Anim 6s infinite; opacity: 0; }
+  .demo-stage-card.c1 .check { animation: check1Anim 6s infinite; opacity: 0; }
+  .demo-stage-card.c3 .check { animation: check3Anim 6s infinite; opacity: 0; }
+  @keyframes c0Anim {
+    0%,5%{background:#1a2942} 10%,92%{background:rgba(6,199,85,.18);box-shadow:0 0 16px rgba(6,199,85,.2)} 97%,100%{background:#1a2942;box-shadow:none}
+  }
+  @keyframes c1Anim {
+    0%,18%{background:#1a2942} 25%,92%{background:rgba(6,199,85,.18);box-shadow:0 0 16px rgba(6,199,85,.2)} 97%,100%{background:#1a2942;box-shadow:none}
+  }
+  @keyframes c3Anim {
+    0%,32%{background:#1a2942} 40%,92%{background:rgba(6,199,85,.18);box-shadow:0 0 16px rgba(6,199,85,.2)} 97%,100%{background:#1a2942;box-shadow:none}
+  }
+  @keyframes check0Anim {
+    0%,7%{opacity:0;transform:scale(0)} 11%{opacity:1;transform:scale(1.3)} 15%,92%{opacity:1;transform:scale(1)} 97%,100%{opacity:0;transform:scale(0)}
+  }
+  @keyframes check1Anim {
+    0%,20%{opacity:0;transform:scale(0)} 26%{opacity:1;transform:scale(1.3)} 30%,92%{opacity:1;transform:scale(1)} 97%,100%{opacity:0;transform:scale(0)}
+  }
+  @keyframes check3Anim {
+    0%,34%{opacity:0;transform:scale(0)} 41%{opacity:1;transform:scale(1.3)} 45%,92%{opacity:1;transform:scale(1)} 97%,100%{opacity:0;transform:scale(0)}
+  }
+
+  /* TRUST STRIP */
+  .trust { background: #0f1b2d; color: #dce6f2; padding: 0; }
+  .trust .wrap { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; }
+  .trust .t { padding: 26px 22px; text-align: center; border-right: 1px solid #21344c; }
+  .trust .t:last-child { border-right: 0; }
+  .trust .t .tic { font-size: 24px; margin-bottom: 6px; }
+  .trust .t strong { display: block; font-size: 16px; color: #fff; margin-bottom: 2px; }
+  .trust .t span { font-size: 13px; color: #9fb3cc; }
+
+  /* PROBLEM + BEFORE/AFTER */
+  .issue-card {
+    background: var(--bg2); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 32px; max-width: 1000px; margin: 0 auto 36px;
+  }
+  .issue-card h3 { margin: 0 0 12px; font-size: 20px; }
+  .issue-card .stages { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
+  .issue-stage {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px; font-size: 13px;
+  }
+  .issue-stage .day { font-size: 10px; color: var(--muted); letter-spacing: .06em; margin-bottom: 6px; }
+  .label-ok { display: inline-block; background: #eafaf0; color: var(--brand-d); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .label-ng { display: inline-block; background: #ffe5e0; color: var(--warn); font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .issue-explainer {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px;
+    padding: 18px; margin-top: 16px; font-size: 14px; color: var(--ink2);
+  }
+  .issue-warn {
+    background: #fff4e5; border-left: 3px solid var(--warn);
+    padding: 10px 14px; border-radius: 8px; margin-top: 14px; font-size: 14px;
+  }
+  .ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: center; max-width: 760px; margin: 32px auto 0; }
+  .ba-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  .ba-card h3 { margin: 0 0 10px; font-size: 15px; }
+  .ba-card .num { font-size: 28px; font-weight: 800; margin: 4px 0; }
+  .ba .gap { color: var(--warn); font-weight: 700; }
+  .ba .arrow { font-size: 26px; color: var(--brand); font-weight: 800; }
+  .ba-card.after { background: #f0fbf4; border-color: #bdeacb; }
+
+  /* 3 CV CARDS */
+  .cv-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 32px; }
+  .cv-card {
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 22px;
+    background: #fff; position: relative; display: flex; flex-direction: column;
+  }
+  .cv-card .day { font-size: 10px; color: var(--muted); letter-spacing: .08em; font-weight: 700; margin-bottom: 6px; }
+  .cv-card .cic { width: 48px; height: 48px; border-radius: 11px; background: #eafaf0; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 12px; color: var(--brand-d); }
+  .cv-card .cic svg { width: 26px; height: 26px; }
+  .cv-card h3 { margin: 0 0 6px; font-size: 18px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .cv-card .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+  .badge-precision { background: #eafaf0; color: var(--brand-d); }
+  .badge-new { background: #ffe5e0; color: var(--warn); }
+  .badge-star { background: #fff4e5; color: #8a5a00; }
+  .cv-card p { margin: 8px 0 0; color: var(--ink2); font-size: 14px; flex: 1; }
+
+  /* GRID 3 */
+  .grid3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+  .icard {
+    border: 1px solid var(--line); border-radius: var(--radius); padding: 22px;
+    background: #fff; display: flex; flex-direction: column;
+  }
+  .icard .ico {
+    width: 44px; height: 44px; border-radius: 11px; background: #eafaf0;
+    display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 12px;
+  }
+  .icard h3 { margin: 0 0 6px; font-size: 17px; }
+  .icard p { margin: 0 0 14px; color: var(--ink2); font-size: 14px; flex: 1; }
+  .case-metric {
+    margin-top: auto; padding-top: 14px; border-top: 1px dashed var(--line);
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  }
+  .metric-label { font-size: 11px; color: var(--muted); font-weight: 600; }
+  .metric-value { font-size: 13px; color: var(--ink2); }
+  .metric-value strong { color: var(--brand-d); font-size: 15px; }
+
+  /* COMPARISON */
+  .compare-wrap { max-width: 1000px; margin: 0 auto; }
+  table.cmp {
+    width: 100%; border-collapse: collapse; background: #fff;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    overflow: hidden; margin-bottom: 32px;
+  }
+  table.cmp th, table.cmp td {
+    padding: 14px 16px; text-align: center;
+    border-bottom: 1px solid var(--line); font-size: 14px;
+  }
+  table.cmp th { background: var(--bg2); font-size: 13px; color: var(--ink2); }
+  table.cmp td:first-child, table.cmp th:first-child { text-align: left; font-weight: 600; }
+  table.cmp .brand-col { background: #f0fbf4; font-weight: 700; color: var(--brand-d); }
+
+  .why-card { background: #0f1b2d; color: #dce6f2; border-radius: var(--radius); padding: 32px; }
+  .why-card h3 { margin: 0 0 12px; color: #fff; font-size: 20px; }
+  .why-card p { margin: 0 0 18px; color: #9fb3cc; font-size: 14px; }
+  .flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: center; margin-top: 18px; }
+  .flow-step { background: #1a2942; border-radius: 10px; padding: 16px; text-align: center; font-size: 13px; color: #9fb3cc; }
+  .flow-step .step-label { font-size: 10px; color: #8aa0bb; letter-spacing: .06em; margin-bottom: 4px; }
+  .flow-step strong { color: #fff; font-size: 14px; display: block; margin-bottom: 4px; }
+  .flow-arrow { color: #33d17a; font-size: 20px; font-weight: 800; text-align: center; }
+
+  /* NO-COVER NOTICE */
+  .nocover {
+    background: #fff4e5; border: 1px solid #ffd089; border-radius: var(--radius);
+    padding: 22px; max-width: 900px; margin: 0 auto; display: flex; gap: 16px; align-items: flex-start;
+  }
+  .nocover-ic { font-size: 24px; }
+  .nocover h3 { margin: 0 0 6px; font-size: 16px; color: #8a5a00; }
+  .nocover p { margin: 0; font-size: 14px; color: var(--ink2); }
+
+  /* STEP CARDS */
+  .step-card { text-align: center; }
+  .step-card .step-num { font-size: 48px; color: var(--brand); font-weight: 800; line-height: 1; margin-bottom: 8px; }
+
+  /* PRICING */
+  .pgrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; max-width: 880px; margin: 0 auto; }
+  .pcard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; text-align: center; }
+  .pcard.feat { border: 2px solid var(--brand); position: relative; }
+  .pcard.feat::before {
+    content: &quot;\304A\3059\3059\3081&quot;;
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--brand); color: #fff; font-size: 12px; font-weight: 700;
+    padding: 4px 14px; border-radius: 999px;
+  }
+  .pcard h3 { margin: 0 0 4px; font-size: 18px; }
+  .pcard .yen { font-size: 32px; font-weight: 800; margin: 8px 0 2px; }
+  .pcard .unit { color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+  .pcard ul { list-style: none; padding: 0; margin: 0 0 18px; text-align: left; font-size: 14px; color: var(--ink2); }
+  .pcard li { padding: 6px 0; border-bottom: 1px dashed var(--line); }
+
+  /* SUPPORT */
+  .support-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; max-width: 1000px; margin: 0 auto; }
+  .scard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; text-align: center; }
+  .scard.sfeat { border: 2px solid var(--brand); }
+  .scard h3 { margin: 0 0 8px; font-size: 16px; }
+  .scard .feat-tag { color: var(--brand-d); font-weight: 700; font-size: 13px; margin-bottom: 6px; display: block; }
+  .scard .syen { font-size: 24px; font-weight: 800; margin: 8px 0; }
+  .scard .syen-unit { color: var(--muted); font-size: 13px; }
+  .scard ul { list-style: none; padding: 0; margin: 14px 0; text-align: left; font-size: 13px; color: var(--ink2); }
+  .scard li::before { content: &quot;\30FB&quot;; color: var(--brand); }
+
+  /* CASES */
+  .cases { background: var(--bg2); }
+  .case-item {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 26px; display: grid; grid-template-columns: 170px 1fr;
+    gap: 24px; margin-bottom: 18px; align-items: start;
+  }
+  .case-item .who { font-size: 14px; }
+  .case-item .who .wbadge {
+    display: inline-block; background: #eafaf0; color: var(--brand-d); font-weight: 700;
+    font-size: 12px; padding: 4px 10px; border-radius: 999px; margin-bottom: 8px;
+  }
+  .case-item .who strong { display: block; font-size: 16px; margin-bottom: 4px; }
+  .case-item .who .meta { color: var(--muted); font-size: 13px; }
+  .case-item .body p { margin: 0 0 8px; font-size: 14px; color: var(--ink2); }
+  .case-item .body .clabel { font-weight: 700; color: var(--ink); font-size: 13px; }
+  .case-item .body .result {
+    background: #f0fdf4; border-left: 3px solid var(--brand);
+    padding: 10px 14px; border-radius: 8px; color: var(--ink2); font-size: 14px; margin-top: 6px;
+  }
+
+  /* FAQ */
+  .faq-grid { max-width: 760px; margin: 0 auto; }
+  .faq-item {
+    border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px 22px; margin-bottom: 12px; background: #fff; transition: .2s;
+  }
+  .faq-item[open] { box-shadow: var(--shadow); border-color: #bdeacb; }
+  .faq-item summary {
+    font-weight: 700; cursor: pointer; list-style: none;
+    display: flex; justify-content: space-between; align-items: center; font-size: 15px;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary::after {
+    content: &#x27;+&#x27;; font-size: 24px; color: var(--brand); font-weight: 300;
+    line-height: 1; transition: transform .2s;
+  }
+  .faq-item[open] summary::after { content: &#x27;\2212&#x27;; }
+  .faq-item p { margin: 14px 0 0; color: var(--ink2); font-size: 14px; line-height: 1.7; }
+
+  /* FINAL CTA */
+  .final { background: #0f1b2d; color: #fff; text-align: center; }
+  .final h2 { color: #fff; font-size: 34px; }
+  .final p { color: #dce6f2; max-width: 640px; margin: 0 auto 28px; }
+
+  /* FOOTER */
+  footer {
+    padding: 36px 0 24px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 13px; text-align: center;
+  }
+  footer a { color: var(--ink2); margin: 0 14px; text-decoration: none; }
+
+  /* FLOATING CTA */
+  .floating-cta { display: none; }
+
+  /* RESPONSIVE */
+  @media (max-width: 860px) {
+    .floating-cta {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: rgba(255,255,255,.96); backdrop-filter: blur(8px);
+      padding: 12px 16px; border-top: 1px solid var(--line); z-index: 50; display: block;
+    }
+    .floating-cta .btn-primary { display: block; text-align: center; width: 100%; padding: 14px; }
+    body { padding-bottom: 80px; }
+    .trust .wrap { grid-template-columns: 1fr; }
+    .trust .t { border-right: 0; border-bottom: 1px solid #21344c; }
+    .hero .wrap { grid-template-columns: 1fr; }
+    .grid3, .cv-grid, .pgrid, .support-grid { grid-template-columns: 1fr; }
+    .ba, .flow { grid-template-columns: 1fr; gap: 14px; }
+    .ba .arrow, .flow-arrow { transform: rotate(90deg); }
+    .case-item { grid-template-columns: 1fr; }
+    .issue-card .stages { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    h1 { font-size: 32px !important; }
+    h2 { font-size: 24px; }
+    .bonus-2col { grid-template-columns: 1fr !important; }
+    table.cmp { font-size: 12px; }
+    table.cmp th, table.cmp td { padding: 10px 8px; }
+  }
+
+  /* ACCESSIBILITY */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style><header class="nav"><div class="wrap"><div class="logo">line<span>trace</span></div><nav class="nav-links"><a href="#problem">課題</a><a href="#solution">解決策</a><a href="#comparison">比較</a><a href="#price">料金</a><a href="#faq">FAQ</a><a href="/blog">ブログ</a></nav><div class="nav-cta"><a href="https://app.linetrace.io" class="login-link">ログイン</a><a href="/signup" class="cta">2週間無料で試す</a></div></div></header><section class="hero"><div class="wrap"><div><h1>LINEで消えていたCVを、<br/>広告に返す。</h1><p class="lead">友だち追加・LINE内CV・LINE経由Web CV – 3 つの CV を Meta・Google・Yahoo に Conversions API で自動返却。<br/>GTM タグ 1 行・10 分で導入。</p><a href="/signup" class="btn btn-primary">2週間無料で試す</a><div style="margin-top:10px;font-size:13px;color:var(--muted)">クレジットカード登録不要 / 設定 10 分</div></div><div class="live-demo-card"><div class="demo-head"><span class="demo-title">3 つの CV を広告に返却</span></div><div class="demo-stages"><div class="demo-stage-card c0"><div class="check">✓</div><div class="day">DAY 0</div><div class="ic">💬</div><div class="name">友だち追加 CV</div></div><div class="demo-stage-card c1"><div class="check">✓</div><div class="day">DAY 1</div><div class="ic">📝</div><div class="name">LINE 内 CV</div></div><div class="demo-stage-card c3"><div class="check">✓</div><div class="day">DAY 3</div><div class="ic">🛒</div><div class="name">LINE 経由 Web CV</div></div></div><div class="demo-capi"><div class="label">Conversions API で送信</div><div class="platforms"><span>Meta</span><span>Google</span><span>Yahoo</span></div></div></div></div></section><section class="trust"><div class="wrap" style="grid-template-columns:repeat(4,1fr)"><div class="t"><div class="tic">⏱️</div><strong>最短10分で計測スタート</strong><span>GTM 1 行・Webhook 設定だけ</span></div><div class="t"><div class="tic">🤝</div><strong>設定代行 0円</strong><span>権限を渡すだけ・こちらで全設定</span></div><div class="t"><div class="tic">💴</div><strong>月 ¥10,000〜</strong><span>LINE公式 + 広告アカウント数の従量課金</span></div><div class="t"><div class="tic">🎯</div><strong>クレカ不要で試せる</strong><span>2 週間無料トライアル</span></div></div></section><section id="problem"><div class="wrap"><p class="eyebrow" style="text-align:center">よくある課題</p><h2>友だち追加の「その先」で起きた<br/>コンバージョン、広告に返せていますか？</h2><p class="sub">広告経由の友だち追加は計測できても、<strong style="color:var(--ink)">その後の LINE 内アクションや LINE 経由の Web 購入は広告に返らない</strong>のが、多くのアカウントで起きている計測ロスです。</p><div class="issue-card"><h3>多くのアカウントで起きている計測ロス</h3><div class="stages"><div class="issue-stage"><div class="day">DAY 0</div>Meta 広告から LP → LINE 友だち追加<br/><span class="label-ok">✓ 計測中</span></div><div class="issue-stage"><div class="day">DAY 1</div>LINE 内でフォーム回答・リッチメニュータップ<br/><span class="label-ng">✕ ロス</span></div><div class="issue-stage"><div class="day">DAY 3</div>LINE 経由で Web サイトにアクセス → 購入・予約・問い合わせ<br/><span class="label-ng">✕ ロス</span></div></div><div class="issue-explainer"><strong>なぜこの計測ロスが起きるのか</strong><br/>他社の LINE 計測ツールは <strong>LIFF（認証画面方式）</strong>や<strong>計測 URL（直リンク方式）</strong>が主流。<strong>LIFF は LINE アプリ内のウェブビュー上で動作するため、LP のブラウザ Cookie を読み出せません。計測 URL は LP 自体を経由しないため、そもそも広告クリック ID を Cookie に保存する機会がありません。</strong></div><div class="issue-warn">結果、広告の AI（自動入札）が「本当に買ってくれるユーザー」を学習できず、配信最適化が止まり、CPA が高騰します。</div></div></div></section><section id="solution"><div class="wrap"><p class="eyebrow" style="text-align:center">解決策</p><h2>Linetrace は LINE マーケティングの<br/>3 つのコンバージョンを広告に返します</h2><div style="max-width:800px;margin:0 auto 32px;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px"><div style="display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:center;text-align:center"><div><div style="font-size:36px;margin-bottom:8px">💬</div><div style="font-weight:700;font-size:15px;margin-bottom:4px">LINE 公式アカウント</div><div style="font-size:12px;color:var(--muted)">友だち追加・LINE内CV・LINE経由Web CV</div></div><div style="font-size:24px;color:var(--brand);font-weight:800">→</div><div style="background:#f0fbf4;border:2px solid var(--brand);border-radius:14px;padding:16px 12px"><div style="font-weight:800;font-size:18px;color:var(--brand-d);margin-bottom:4px">Linetrace</div><div style="font-size:12px;color:var(--ink2)">CV を捕捉・突合<br/>Conversions API で送信</div></div><div style="font-size:24px;color:var(--brand);font-weight:800">→</div><div><div style="display:flex;justify-content:center;gap:6px;margin-bottom:8px"><span style="background:#1877f2;color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700">Meta</span><span style="background:#4285f4;color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700">Google</span><span style="background:#ff0033;color:#fff;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700">Yahoo</span></div><div style="font-weight:700;font-size:15px;margin-bottom:4px">広告媒体</div><div style="font-size:12px;color:var(--muted)">CV データで自動入札を最適化</div></div></div></div><p class="sub">友だち追加 / LINE 内 CV / LINE 経由 Web CV – それぞれを<strong style="color:var(--ink)">独立したコンバージョンイベント</strong>として Meta・Google・Yahoo に Conversions API で送信。</p><div class="cv-grid"><div class="cv-card"><div class="day">DAY 0</div><div class="cic"><svg viewBox="0 0 24 24"><path d="M12 3C7.03 3 3 6.5 3 10.83c0 2.4 1.4 4.55 3.6 5.97-.13.4-.7 1.93-.83 2.27-.13.43.27.6.6.5 2.27-1.07 3.93-2.07 4.13-2.17.43.07.87.1 1.5.1 4.97 0 9-3.5 9-7.83C21 6.5 16.97 3 12 3z" fill="currentColor"></path><path d="M8 9v4M8 9h2M16 9v4M16 9l-2 4 2 0M10 9v4l3 0" stroke="white" stroke-width="1.2" fill="none"></path></svg></div><h3>友だち追加 CV <span class="badge badge-precision">高精度</span></h3><p>LIFF や認証画面を経由せず、Cookie で広告クリック ID（gclid / fbclid / yclid）を保持。実追加数とのズレを極限まで抑えて CAPI 送信。</p></div><div class="cv-card"><div class="day">DAY 1</div><div class="cic"><svg viewBox="0 0 24 24"><path d="M12 3C7.03 3 3 6.5 3 10.83c0 2.4 1.4 4.55 3.6 5.97-.13.4-.7 1.93-.83 2.27-.13.43.27.6.6.5 2.27-1.07 3.93-2.07 4.13-2.17.43.07.87.1 1.5.1 4.97 0 9-3.5 9-7.83C21 6.5 16.97 3 12 3z" fill="currentColor" opacity="0.3"></path><rect x="6" y="8" width="12" height="3" rx="1.5" fill="currentColor"></rect><circle cx="14" cy="9.5" r="1" fill="white"></circle><path d="M14 14l2 2 4-4" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><h3>LINE 内 CV <span class="badge badge-new">NEW</span></h3><p>LINE 内でのキーワード送信（フォーム回答完了・リッチメニュー導線等）を CV としてキャッチ。クイックリプライ「はい」やキーワードトリガーで設定。</p></div><div class="cv-card"><div class="day">DAY 3</div><div class="cic"><svg viewBox="0 0 24 24"><path d="M2 3h2.5l2.5 13.5a2 2 0 0 0 2 1.5h9a2 2 0 0 0 2-1.5L21.5 7H6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="9.5" cy="21" r="1.5" fill="currentColor"></circle><circle cx="18" cy="21" r="1.5" fill="currentColor"></circle><path d="M10 11v2M14 11v2M18 11v2" stroke="currentColor" stroke-width="1.5"></path></svg></div><h3>LINE 経由 Web CV <span class="badge badge-star">★目玉新機能</span></h3><p>LINE のリッチメニュー等から Web に戻った後の購入・予約・問い合わせを、元の広告クリックに紐付けて返却。LINE 跨ぎのアトリビューションが成立。</p></div></div><div class="ba"><div class="ba-card"><h3>Before：説明できない</h3><p>媒体CV <span class="num">500</span></p><p>LINE実追加 <span class="num gap">120</span></p><p style="color:var(--warn);font-weight:700;margin-top:6px;font-size:13px">→ 乖離で最適化も説明も不能</p></div><div class="arrow">→</div><div class="ba-card after"><h3>After：実測できる</h3><p>媒体CV <span class="num">500</span></p><p>LINE実追加 <span class="num" style="color:var(--brand-d)">480</span></p><p style="color:var(--brand-d);font-weight:700;margin-top:6px;font-size:13px">→ CAPI連携で誤差解消・説明可能</p></div></div><p style="text-align:center;font-size:12px;color:var(--muted);margin-top:18px">※ 数値は典型例（モデルケース）</p></div></section><section><div class="wrap"><p class="eyebrow" style="text-align:center">独自機能</p><h2>さらに、LP のページごと・<br/>ボタンごとに効果が分かる。</h2><p class="sub">FV CTA・中段・フッター・スマホのフローティングバナー – 複数 LP を運営する場合は<strong style="color:var(--ink)">ページ別 × ボタン別の両軸で計測</strong>可能。設定は HTML に属性を 1 つ追加するだけ。</p><div class="bonus-2col" style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:24px"><div><ul style="padding-left:18px;color:var(--ink2);font-size:14px;list-style:disc"><li style="margin-bottom:8px">同一 LP の FV CTA・フッター・フローティングバナー、どれが効いているか比較</li><li style="margin-bottom:8px">複数 LP がある場合は「ページ別 × ボタン別」で集計可能</li><li style="margin-bottom:8px">LP 改善の A/B テスト時に、意思決定の数値根拠が出せる</li><li>GTM タグの修正は不要、CDN 経由で全顧客サイトに自動展開済み</li></ul><code style="background:#0f1b2d;color:#33d17a;padding:14px;border-radius:8px;display:block;margin-top:16px;font-size:13px;white-space:pre-wrap">&lt;a href=&quot;https://lin.ee/xxx&quot;
+  data-linetrace-button=&quot;footer_cta&quot;&gt;
+  LINE 相談
+&lt;/a&gt;</code></div><div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px"><h4 style="margin:0 0 14px;font-size:14px">📊 ボタン別 友だち追加数</h4><div style="margin-bottom:10px;font-size:12px;color:var(--muted)">サイト：example.com / 直近 7 日</div><div style="display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px"><span style="width:110px">footer_cta</span><div style="flex:1;background:#eef4f8;border-radius:999px;height:10px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#06c755,#33d17a);width:90%"></div></div><span style="width:30px;text-align:right;font-weight:700">23</span></div><div style="display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px"><span style="width:110px">floating_banner</span><div style="flex:1;background:#eef4f8;border-radius:999px;height:10px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#06c755,#33d17a);width:52%"></div></div><span style="width:30px;text-align:right;font-weight:700">12</span></div><div style="display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px"><span style="width:110px">hero_cta</span><div style="flex:1;background:#eef4f8;border-radius:999px;height:10px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#06c755,#33d17a);width:35%"></div></div><span style="width:30px;text-align:right;font-weight:700">8</span></div><div style="display:flex;align-items:center;gap:10px;margin:8px 0;font-size:13px"><span style="width:110px">sidebar</span><div style="flex:1;background:#eef4f8;border-radius:999px;height:10px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#06c755,#33d17a);width:13%"></div></div><span style="width:30px;text-align:right;font-weight:700">3</span></div></div></div></div></section><section style="background:var(--bg2)"><div class="wrap"><p class="eyebrow" style="text-align:center">業種別ユースケース</p><h2>あなたの業種では、こう効きます</h2><p class="sub">LINE 公式アカウントを CV 導線に使い、Meta/Google/Yahoo 広告を運用している事業者・代理店向け。</p><div class="grid3"><div class="icard"><div class="ico">&#128135;</div><h3>美容院・サロン</h3><p>「どの広告クリエイティブから友だち追加されたか」を実測。来店予約に繋がる流入を媒体に返して入札最適化。</p><div class="case-metric"><span class="metric-label">典型例</span><span class="metric-value">CPA<!-- --> <strong>30% 改善</strong></span></div></div><div class="icard"><div class="ico">&#127947;&#65039;</div><h3>ジム・スクール</h3><p>体験予約 LP のどの CTA ボタンが追加に効くかを可視化。複数キャンペーンの費用対効果を横並び比較。</p><div class="case-metric"><span class="metric-label">典型例</span><span class="metric-value">体験予約CV<!-- --> <strong>1.5x</strong></span></div></div><div class="icard"><div class="ico">&#127973;</div><h3>クリニック</h3><p>媒体上の CV 件数と LINE 実追加の乖離を解消し、自由診療メニューごとの獲得単価を正確に算出。</p><div class="case-metric"><span class="metric-label">典型例</span><span class="metric-value">ROAS<!-- --> <strong>1.8x</strong></span></div></div><div class="icard"><div class="ico">&#127968;</div><h3>不動産</h3><p>物件問い合わせの友だち追加を媒体に返し、エリア・物件種別ごとの広告 ROI を実測ベースで判断。</p><div class="case-metric"><span class="metric-label">典型例</span><span class="metric-value">問い合わせCV<!-- --> <strong>2x</strong></span></div></div><div class="icard"><div class="ico">&#128722;</div><h3>EC・D2C</h3><p>初回クーポン LINE 登録の流入元を特定。LINE 経由の Web 購入 CV まで一気通貫で計測。</p><div class="case-metric"><span class="metric-label">典型例</span><span class="metric-value">LINE経由Web CV<!-- --> <strong>+40%</strong></span></div></div><div class="icard"><div class="ico">&#128227;</div><h3>広告代理店</h3><p>複数クライアントを 1 ダッシュボードで管理。季節・商材で変わる広告アカウントは使う月だけ連携し、停止月は課金対象外。「正確な数字」でレポートでき、提案の幅が広がる。</p><div class="case-metric"><span class="metric-label">典型例</span><span class="metric-value">レポート工数<!-- --> <strong>-50%</strong></span></div></div></div></div></section><section id="comparison"><div class="wrap"><p class="eyebrow" style="text-align:center">比較</p><h2>他社と比べてください。</h2><p class="sub">LINE 計測ツールには大きく 3 つの方式があります。それぞれの<strong style="color:var(--ink)">技術的特性</strong>と Linetrace の位置付け：</p><div class="compare-wrap"><table class="cmp"><thead><tr><th>項目</th><th>LIFF 認証画面方式</th><th>計測 URL 方式（直リンク）</th><th class="brand-col">Cookie × GTM 方式（Linetrace）</th></tr></thead><tbody><tr><td>認証画面</td><td>あり</td><td>なし</td><td class="brand-col">なし</td></tr><tr><td>友だち追加 CAPI</td><td>△</td><td>○</td><td class="brand-col">○</td></tr><tr><td>LINE 内 CV CAPI</td><td>△一部対応</td><td>–</td><td class="brand-col">○</td></tr><tr><td>LINE 跨ぎ Web CV</td><td>–</td><td>–</td><td class="brand-col">○</td></tr><tr><td>LP 内ボタン単位の計測</td><td>–</td><td>–</td><td class="brand-col">○</td></tr><tr><td>月額基本料金</td><td>¥100,000〜</td><td>¥100,000〜</td><td class="brand-col">¥10,000〜</td></tr></tbody></table><p style="font-size:12px;color:var(--muted);margin:0 0 32px">※ 各方式の代表的な技術特性。Linetrace は LP 経由動線を前提とした計測モデルのため、直リンク・QR からの動線をメインとする場合は別方式が適しているケースもあります。</p><div class="why-card"><h3>なぜ Linetrace だけが LINE 跨ぎ Web CV を実現できるのか</h3><p>他社ツールは LIFF や計測 URL ベース。Web 側との橋渡しを持っていないため、技術的に「LINE 経由の Web 購入を広告に返す」ことができません。Linetrace は <strong style="color:#fff">LP〜LINE〜Web を 1 つの Cookie セッションで繋ぐ計測モデル</strong>。</p><div class="flow"><div class="flow-step"><div class="step-label">LP</div><strong>広告 → 着地</strong>linetrace.js<br/>Cookie 保持</div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-label">LINE</div><strong>友だち追加・トーク</strong>UID 紐付<br/>セッション継続</div><div class="flow-arrow">→</div><div class="flow-step"><div class="step-label">Web</div><strong>購入・申込</strong>Conversions API<br/>広告クリック引当</div></div></div></div></div></section><section><div class="wrap"><div class="nocover"><div class="nocover-ic">⚠️</div><div><h3>Linetrace で対応できないケース</h3><p>LP を経由せず広告から直接 LINE プロフィール画面に遷移させる動線・PC ブラウザのみの動線・LIFF 認証画面が必須の運用フロー – これらは現状未対応です。<strong>GTM タグを設置可能な LP からの LINE 友だち追加導線</strong>をお持ちのケースで効果を発揮します。</p></div></div></div></section><section style="background:var(--bg2)"><div class="wrap"><p class="eyebrow" style="text-align:center">セットアップ</p><h2>設定方法を選べます。</h2><p class="sub">GTM や LINE 公式の操作に慣れている方はセルフサーブ、設定が不安な方はおまかせ設定（無料）をお選びください。</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:900px;margin:0 auto"><div style="background:#fff;border:2px solid var(--brand);border-radius:var(--radius);padding:28px;text-align:center;position:relative"><div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--brand);color:#fff;font-size:12px;font-weight:700;padding:4px 14px;border-radius:999px">おすすめ</div><div style="font-size:48px;margin-bottom:12px">🤝</div><h3 style="margin:0 0 4px;font-size:20px">おまかせ設定</h3><div style="font-size:32px;font-weight:800;margin:8px 0 4px">¥0</div><div style="color:var(--muted);font-size:13px;margin-bottom:14px">トライアル期間中無料</div><ul style="list-style:none;padding:0;margin:0 0 18px;font-size:14px;color:var(--ink2);text-align:left"><li style="padding:6px 0;border-bottom:1px dashed var(--line)">✓ <!-- -->アクセス権を渡すだけ（約5分）</li><li style="padding:6px 0;border-bottom:1px dashed var(--line)">✓ <!-- -->Linetraceチームが全設定を代行</li><li style="padding:6px 0;border-bottom:1px dashed var(--line)">✓ <!-- -->1〜2営業日で完了</li><li style="padding:6px 0;border-bottom:1px dashed var(--line)">✓ <!-- -->技術的な知識は一切不要</li><li style="padding:6px 0;border-bottom:1px dashed var(--line)">✓ <!-- -->完了後に権限削除OK</li></ul><a href="/signup" class="btn btn-primary" style="display:block;text-align:center;width:100%">おまかせで始める</a></div><div style="background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px;text-align:center"><div style="font-size:48px;margin-bottom:12px">⚡</div><h3 style="margin:0 0 4px;font-size:20px">自分で設定（セルフサーブ）</h3><div style="font-size:32px;font-weight:800;margin:8px 0 4px">¥0</div><div style="color:var(--muted);font-size:13px;margin-bottom:14px">ドキュメント・チャットサポート付き</div><ul style="list-style:none;padding:0;margin:0 0 18px;font-size:14px;color:var(--ink2);text-align:left"><li style="padding:6px 0;border-bottom:1px dashed var(--line)">✓ <!-- -->GTMタグ1行 + Webhook URL設定</li><li style="padding:6px 0;border-bottom:1px dashed var(--line)">✓ <!-- -->ダッシュボードの指示に従って10分</li><li style="padding:6px 0;border-bottom:1px dashed var(--line)">✓ <!-- -->各ステップに手順ガイドあり</li><li style="padding:6px 0;border-bottom:1px dashed var(--line)">✓ <!-- -->つまずいたらおまかせに切替可</li></ul><a href="/signup" class="btn btn-ghost" style="display:block;text-align:center;width:100%">自分で設定する</a></div></div></div></section><section id="price"><div class="wrap"><p class="eyebrow" style="text-align:center">料金</p><h2>使った分だけ。シンプルな従量課金。</h2><p class="sub">CV 件数による課金なし。LINE 公式アカウント数と広告アカウント連携数だけで決まる明朗会計です。</p><div class="pgrid" style="max-width:700px;grid-template-columns:repeat(2, 1fr)"><div class="pcard feat"><h3>基本料金</h3><div class="yen">¥10,000<span style="font-size:14px">/月・1 LINE公式アカウント</span></div><div class="unit">LINE 公式アカウントの友だち追加計測</div><ul><li>✓ 3 つの CV すべて対応</li><li>✓ LP 内ボタン単位の計測</li><li>✓ LINE 内 CV 計測</li><li>✓ 2 週間無料トライアル</li></ul></div><div class="pcard"><h3>広告アカウント連携</h3><div class="yen">¥3,000<span style="font-size:14px">/月・1 アカウント</span></div><div class="unit">Meta / Google / Yahoo CAPI 自動送信</div><ul><li>✓ Meta Conversions API</li><li>✓ Google Measurement Protocol</li><li>✓ Yahoo 広告 CAPI（SS / YDA）</li><li>✓ 連携ごとに一時停止／再開（停止月はその連携費が課金対象外）</li></ul></div></div><div style="text-align:center;margin-top:24px"><a href="/signup" class="btn btn-primary" style="display:inline-block;font-size:16px;padding:14px 40px">2 週間無料で試す</a><p style="color:var(--muted);font-size:12px;margin-top:10px">例：LINE公式 1 つ + Meta 1 媒体 = ¥13,000/月</p><p style="color:var(--muted);font-size:12px;margin-top:4px">季節・商材で広告アカウントが変わる運用は、<strong style="color:var(--ink2)">使う月だけ連携</strong>。オフシーズンは停止すれば、その月は基本料金 ¥10,000 のみ。</p></div></div></section><section class="cases"><div class="wrap"><p class="eyebrow" style="text-align:center">導入事例（匿名）</p><h2>現場でどう変わったか</h2><p class="sub">※ 顧客許可取得までは匿名・典型例で掲載しています。許可取得後に実測値・実顧客の声へ差し替えます。</p><div class="case-item"><div class="who"><span class="wbadge">広告代理店</span><strong>美容・サロン系を扱う A 社</strong><span class="meta">運用担当 / 複数クライアント</span></div><div class="body"><p><span class="clabel">課題：</span>Meta 広告の CV 件数と LINE 実追加が合わず、月次レポートで「数字が説明できない」状態だった。</p><p><span class="clabel">Linetrace 導入後：</span>友だち追加を Meta CAPI で媒体に返し、LP 内のどのボタン経由かまで可視化。</p><div class="result">✓ 媒体と LINE の数字の乖離が解消し、レポートで「実測値」を提示できるように。</div></div></div><div class="case-item"><div class="who"><span class="wbadge">事業会社</span><strong>人材・採用系の B 社</strong><span class="meta">マーケ担当 / 1 ブランド</span></div><div class="body"><p><span class="clabel">課題：</span>応募導線の LINE 登録がどの広告から来たか分からず、媒体の自動入札が最適化されなかった。</p><p><span class="clabel">Linetrace 導入後：</span>GTM タグ 1 行と Webhook URL の設定のみ、エンジニアなしで 10 分導入。</p><div class="result">✓ 獲得単価を媒体別に把握でき、配信予算の振り分け判断が「推測」から「実測」に。</div></div></div><div class="case-item"><div class="who"><span class="wbadge">事業会社</span><strong>不動産系の C 社</strong><span class="meta">販促担当 / Yahoo・Google 併用</span></div><div class="body"><p><span class="clabel">課題：</span>複数媒体を運用しており、媒体をまたいだ CV 計測の粒度が揃わずレポート集約に手間がかかっていた。</p><p><span class="clabel">Linetrace 導入後：</span>Meta/Google/Yahoo の 3 媒体 CAPI に対応し、Looker Studio 集約用にデータ粒度を統一。</p><div class="result">✓ 媒体横断の CV を同じ基準で集計でき、レポート作成の工数を削減。</div></div></div></div></section><section id="faq"><div class="wrap"><p class="eyebrow" style="text-align:center">FAQ</p><h2>よくあるご質問</h2><p class="sub">ご導入前によくいただくご質問をまとめています。記載のない事項はお気軽にお問い合わせください。</p><div class="faq-grid"><details class="faq-item"><summary>既存の Meta Pixel・GA4 はそのままで使えますか？</summary><p>はい。Linetrace は既存の購入イベントを上書きせず、独立したカスタムイベントとして送信するため、既存の計測数値を汚さず、広告の機械学習用データだけを安全に追加できます。レポートの数値も変わりません。</p></details><details class="faq-item"><summary>既存の LINE 拡張ツール（エルメ・Lステップ・サブスクライン等）と併用できますか？</summary><p>はい、併用可能です。Linetrace は計測専用ツールのため、メッセージ配信機能や顧客管理機能はお使いのツールをそのままご利用いただけます。Webhook は中継して既存ツールに転送する設計です。</p></details><details class="faq-item"><summary>Safari の ITP で 7 日後に Cookie が消えるのでは？</summary><p>Linetrace は first-party Cookie（顧客サイトのドメイン上）で動作するため、ITP の影響を最小限に抑えた設計です。詳しくは技術ドキュメントをご確認ください。</p></details><details class="faq-item"><summary>データの保存場所・セキュリティはどうなっていますか？</summary><p>計測データは AWS（東京リージョン）に保存。PII（氏名・メール・電話）は一切取得しない設計で、保存するのは LINE UID と計測パラメータのみ。HTTPS / RLS 等で厳格に保護しています。</p></details><details class="faq-item"><summary>導入にどのくらい時間がかかりますか？</summary><p>自分で設定する場合は最短 10 分。GTM タグ 1 行と Webhook URL の設定、CAPI 接続の 3 ステップで完了します。設定に不安がある場合は「おまかせ設定（無料）」をお選びください。アクセス権をお渡しいただくだけで、こちらで全設定を代行します。</p></details><details class="faq-item"><summary>トライアル期間中・終了後の解約はどうなりますか？</summary><p>2 週間の無料トライアル中はいつでも解約可能、クレジットカード未登録のため自動課金もありません。トライアル後の契約期間も月単位で、最低契約期間はありません。</p></details><details class="faq-item"><summary>使わない月の広告アカウント連携費はどうなりますか？（季節・商材で運用が変わる場合）</summary><p>ダッシュボードから広告アカウント連携ごとに一時停止できます。停止中はその連携の CAPI 送信が止まり、その月の連携費（¥3,000）は課金対象外になります（計測・ダッシュボード閲覧は継続）。基本料金 ¥10,000 は契約中は継続します。繁忙期だけ連携し、オフシーズンは停止する、といった季節運用に対応しています。</p></details></div></div></section><section class="final" id="cta"><div class="wrap"><h2>LINE を跨いだ「真のコンバージョン」を、<br/>今すぐ計測しはじめる。</h2><p>クレジットカード登録不要、GTM タグ 1 行で 10 分で開始。<br/>2 週間後に継続するかしないか、それから決めてください。</p><div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><a href="/signup" class="btn btn-primary">2 週間無料で試す</a></div></div></section><footer><a href="/privacy">プライバシーポリシー</a><a href="/terms">利用規約</a><a href="/tokusho">特定商取引法に基づく表記</a><a href="/blog">ブログ</a><a href="/contact">お問い合わせ</a><p style="margin-top:14px">© 2026 Linetrace</p></footer><div class="floating-cta"><a href="/signup" class="btn btn-primary">2 週間無料で試す（クレカ不要）</a></div><script src="/_next/static/chunks/webpack-031f1d41bebaa59b.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0]);self.__next_f.push([2,null])</script><script>self.__next_f.push([1,"1:I[4435,[],\"\"]\n3:I[8424,[],\"ClientPageRoot\"]\n4:I[5594,[\"8582\",\"static/chunks/app/landing/page-e8d0a3011d45e253.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc\"],\"default\",1]\n5:I[8548,[],\"\"]\n6:I[8668,[],\"\"]\n7:\"$Sreact.suspense\"\n8:I[2342,[\"3185\",\"static/chunks/app/layout-76077e645da79ef9.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc\"],\"AttributionTracker\"]\n9:I[4177,[\"3185\",\"static/chunks/app/layout-76077e645da79ef9.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc\"],\"GA4PageviewTracker\"]\na:I[895,[\"3185\",\"static/chunks/app/layout-76077e645da79ef9.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc\"],\"ImpersonationBanner\"]\nb:I[5911,[\"3185\",\"static/chunks/app/layout-76077e645da79ef9.js?dpl=dpl_Bb8mFfi6LTNfXUnSpoaskosgDzsc\"],\"ClaritySessionTagger\"]\nd:I[8276,[],\"\"]\ne:[]\n"])</script><script>self.__next_f.push([1,"0:[\"$\",\"$L1\",null,{\"buildId\":\"7W1yIIkfMrVAWgVkFsqjT\",\"assetPrefix\":\"\",\"urlParts\":[\"\",\"landing\"],\"initialTree\":[\"\",{\"children\":[\"landing\",{\"children\":[\"__PAGE__\",{}]}]},\"$undefined\",\"$undefined\",true],\"initialSeedData\":[\"\",{\"children\":[\"landing\",{\"children\":[\"__PAGE__\",{},[[\"$L2\",[\"$\",\"$L3\",null,{\"props\":{\"params\":{},\"searchParams\":{}},\"Component\":\"$4\"}],null],null],null]},[[null,[\"$\",\"$L5\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\",\"landing\",\"children\"],\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L6\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"notFoundStyles\":\"$undefined\"}]],null],null]},[[null,[\"$\",\"html\",null,{\"lang\":\"ja\",\"children\":[[\"$\",\"head\",null,{\"children\":[[\"$\",\"link\",null,{\"rel\":\"preconnect\",\"href\":\"https://fonts.googleapis.com\"}],[\"$\",\"link\",null,{\"rel\":\"preconnect\",\"href\":\"https://fonts.gstatic.com\",\"crossOrigin\":\"anonymous\"}],[\"$\",\"link\",null,{\"href\":\"https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800\u0026display=swap\",\"rel\":\"stylesheet\"}],[\"$\",\"script\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'\u0026l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PXJPF9GH');\"}}],[\"$\",\"script\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src=\\\"https://www.clarity.ms/tag/\\\"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, \\\"clarity\\\", \\\"script\\\", \\\"wdhbgao4nw\\\");\"}}]]}],[\"$\",\"body\",null,{\"style\":{\"fontFamily\":\"'Noto Sans JP', system-ui, -apple-system, sans-serif\",\"margin\":0,\"padding\":0,\"backgroundColor\":\"#f5f5f5\",\"fontSize\":16,\"lineHeight\":1.7,\"wordBreak\":\"keep-all\",\"overflowWrap\":\"anywhere\",\"WebkitTextSizeAdjust\":\"100%\",\"overflowX\":\"hidden\"},\"children\":[[\"$\",\"noscript\",null,{\"children\":[\"$\",\"iframe\",null,{\"src\":\"https://www.googletagmanager.com/ns.html?id=GTM-PXJPF9GH\",\"height\":\"0\",\"width\":\"0\",\"style\":{\"display\":\"none\",\"visibility\":\"hidden\"}}]}],[\"$\",\"$7\",null,{\"fallback\":null,\"children\":[\"$\",\"$L8\",null,{}]}],[\"$\",\"$7\",null,{\"fallback\":null,\"children\":[\"$\",\"$L9\",null,{}]}],[\"$\",\"$7\",null,{\"fallback\":null,\"children\":[\"$\",\"$La\",null,{}]}],[\"$\",\"$7\",null,{\"fallback\":null,\"children\":[\"$\",\"$Lb\",null,{}]}],[\"$\",\"$L5\",null,{\"parallelRouterKey\":\"children\",\"segmentPath\":[\"children\"],\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L6\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[\"$\",\"title\",null,{\"children\":\"404: This page could not be found.\"}],[\"$\",\"div\",null,{\"style\":{\"fontFamily\":\"system-ui,\\\"Segoe UI\\\",Roboto,Helvetica,Arial,sans-serif,\\\"Apple Color Emoji\\\",\\\"Segoe UI Emoji\\\"\",\"height\":\"100vh\",\"textAlign\":\"center\",\"display\":\"flex\",\"flexDirection\":\"column\",\"alignItems\":\"center\",\"justifyContent\":\"center\"},\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"style\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}\"}}],[\"$\",\"h1\",null,{\"className\":\"next-error-h1\",\"style\":{\"display\":\"inline-block\",\"margin\":\"0 20px 0 0\",\"padding\":\"0 23px 0 0\",\"fontSize\":24,\"fontWeight\":500,\"verticalAlign\":\"top\",\"lineHeight\":\"49px\"},\"children\":\"404\"}],[\"$\",\"div\",null,{\"style\":{\"display\":\"inline-block\"},\"children\":[\"$\",\"h2\",null,{\"style\":{\"fontSize\":14,\"fontWeight\":400,\"lineHeight\":\"49px\",\"margin\":0},\"children\":\"This page could not be found.\"}]}]]}]}]],\"notFoundStyles\":[]}]]}]]}]],null],null],\"couldBeIntercepted\":false,\"initialHead\":[null,\"$Lc\"],\"globalErrorComponent\":\"$d\",\"missingSlots\":\"$We\"}]\n"])</script><script>self.__next_f.push([1,"c:[[\"$\",\"meta\",\"0\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}],[\"$\",\"meta\",\"1\",{\"charSet\":\"utf-8\"}],[\"$\",\"title\",\"2\",{\"children\":\"Linetrace — LINEで消えていたCVを、広告に返す。\"}],[\"$\",\"meta\",\"3\",{\"name\":\"description\",\"content\":\"友だち追加・LINE内CV・LINE経由Web CV を Meta・Google・Yahoo に Conversions API で自動返却。GTM タグ 1 行・10 分で導入できる代理店・事業会社向け LINE マーケティング計測 SaaS。\"}],[\"$\",\"meta\",\"4\",{\"name\":\"keywords\",\"content\":\"LINE 計測,CAPI,Conversions API,友だち追加,LINE 内 CV,LINE 経由 Web CV,アトリビューション,代理店,広告運用,Meta,Google,Yahoo\"}],[\"$\",\"meta\",\"5\",{\"property\":\"og:title\",\"content\":\"Linetrace — LINEで消えていたCVを、広告に返す。\"}],[\"$\",\"meta\",\"6\",{\"property\":\"og:description\",\"content\":\"友だち追加・LINE内CV・LINE経由Web CV を Meta・Google・Yahoo に自動返却。\"}],[\"$\",\"meta\",\"7\",{\"property\":\"og:url\",\"content\":\"https://linetrace.io\"}],[\"$\",\"meta\",\"8\",{\"property\":\"og:image\",\"content\":\"https://linetrace.io/og-image.png\"}],[\"$\",\"meta\",\"9\",{\"property\":\"og:image:width\",\"content\":\"1200\"}],[\"$\",\"meta\",\"10\",{\"property\":\"og:image:height\",\"content\":\"630\"}],[\"$\",\"meta\",\"11\",{\"property\":\"og:image:alt\",\"content\":\"Linetrace — LINEで消えていたCVを、広告に返す。\"}],[\"$\",\"meta\",\"12\",{\"name\":\"twitter:card\",\"content\":\"summary_large_image\"}],[\"$\",\"meta\",\"13\",{\"name\":\"twitter:title\",\"content\":\"Linetrace — LINEで消えていたCVを、広告に返す。\"}],[\"$\",\"meta\",\"14\",{\"name\":\"twitter:description\",\"content\":\"友だち追加・LINE内CV・LINE経由Web CV を Meta・Google・Yahoo に自動返却。\"}],[\"$\",\"meta\",\"15\",{\"name\":\"twitter:image\",\"content\":\"https://linetrace.io/og-image.png\"}],[\"$\",\"link\",\"16\",{\"rel\":\"icon\",\"href\":\"/favicon.svg\"}],[\"$\",\"link\",\"17\",{\"rel\":\"apple-touch-icon\",\"href\":\"/favicon.svg\"}]]\n2:null\n"])</script></body></html>
