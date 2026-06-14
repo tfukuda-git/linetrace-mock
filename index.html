@@ -381,21 +381,8 @@
      Screen Navigation
      ══════════════════════════════════════════════════════════════ -->
 <div class="screen-nav">
-  <div class="screen-nav-label">PR-1 Mock</div>
-  <button class="active" onclick="showScreen('onboarding-new')">
-    セットアップ（提案）<span class="diff-badge">NEW</span>
-  </button>
-  <button onclick="showScreen('dashboard-new')">
-    ダッシュボード（提案）<span class="diff-badge">NEW</span>
-  </button>
-  <button onclick="showScreen('dashboard-stuck')">
-    ダッシュボード 24h停滞<span class="diff-badge">NEW</span>
-  </button>
-  <button onclick="showScreen('omakase-flow')">
-    おまかせ遷移先<span class="diff-badge">NEW</span>
-  </button>
-  <button onclick="showScreen('onboarding-current')">セットアップ（現状）</button>
-  <button onclick="showScreen('dashboard-current')">ダッシュボード（現状）</button>
+  <div class="screen-nav-label">LP Review</div>
+  <button class="active" onclick="showScreen('lp-current')">LP（現在）</button>
   <button onclick="showScreen('lp-revised')">LP（改訂版）<span class="diff-badge">NEW</span></button>
   <div class="nav-spacer"></div>
 </div>
@@ -403,7 +390,12 @@
 <!-- ══════════════════════════════════════════════════════════════
      Screen 1: Onboarding - PROPOSED (PR-1)
      ══════════════════════════════════════════════════════════════ -->
-<div id="screen-onboarding-new" class="screen active" data-screen-key="onboarding/proposed">
+<!-- Current LP (iframe) -->
+<div id="screen-lp-current" class="screen active" data-screen-key="lp/current">
+  <iframe src="https://linetrace.io/landing" style="width:100%;height:calc(100vh - 44px);border:none"></iframe>
+</div>
+
+<div id="screen-onboarding-new" class="screen" data-screen-key="onboarding/proposed">
   <div class="app-header">
     <div class="logo">line<span>trace</span></div>
     <nav>
@@ -1529,7 +1521,7 @@ document.addEventListener('click', e => {
   };
 
   comments.push(comment);
-  exitCommentMode();
+  // Stay in comment mode for multiple comments
   renderPins();
   renderPanel();
 
