@@ -247,8 +247,10 @@
     font-size: 20px; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-    transition: transform 0.15s;
+    transition: transform 0.15s, right 0.25s;
   }
+  .comment-panel.open ~ .comment-fab,
+  body:has(.comment-panel.open) .comment-fab { right: 400px; }
   .comment-fab:hover { transform: scale(1.1); }
   .comment-fab .badge-count {
     position: absolute; top: -4px; right: -4px;
