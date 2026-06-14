@@ -396,6 +396,7 @@
   </button>
   <button onclick="showScreen('onboarding-current')">セットアップ（現状）</button>
   <button onclick="showScreen('dashboard-current')">ダッシュボード（現状）</button>
+  <button onclick="showScreen('lp-revised')">LP（改訂版）<span class="diff-badge">NEW</span></button>
   <div class="nav-spacer"></div>
 </div>
 
@@ -1187,6 +1188,215 @@
   <button class="comment-fab" onclick="enterCommentMode()" title="新しいコメント" style="background:#06c755; border-color:#06c755">
     +
   </button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     Screen 7: LP（改訂版）
+     ══════════════════════════════════════════════════════════════ -->
+<div id="screen-lp-revised" class="screen" data-screen-key="lp/revised">
+<style>
+  #screen-lp-revised { --ink: #0f1b2d; --ink2: #3a4a61; --muted: #6b7a8d; --line: #e4e9f0; --bg: #ffffff; --bg2: #f5f8fb; --brand: #06c755; --brand-d: #04a847; --accent: #1f6feb; --warn: #e8533f; --radius: 14px; --shadow: 0 6px 24px rgba(15,27,45,.08); --max: 1080px; }
+  #screen-lp-revised .lp-wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  #screen-lp-revised section { padding: 64px 0; }
+  #screen-lp-revised h1, #screen-lp-revised h2, #screen-lp-revised h3, #screen-lp-revised h4 { color: var(--ink); letter-spacing: -0.01em; font-weight: 700; }
+  #screen-lp-revised h2 { font-size: 30px; line-height: 1.3; margin: 0 0 14px; text-align: center; }
+  #screen-lp-revised .eyebrow { color: var(--brand-d); font-weight: 800; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; margin: 0 0 12px; }
+  #screen-lp-revised .sub { text-align: center; color: var(--muted); max-width: 660px; margin: 0 auto 44px; font-size: 16px; }
+  #screen-lp-revised .btn { display: inline-block; text-decoration: none; border-radius: 999px; font-weight: 700; padding: 14px 28px; font-size: 15px; cursor: pointer; border: 0; transition: all 0.15s; }
+  #screen-lp-revised .btn-primary { background: var(--brand); color: #fff !important; }
+  #screen-lp-revised .btn-ghost { background: #fff; color: var(--ink) !important; border: 1.5px solid var(--line); }
+  #screen-lp-revised header.lp-nav { position: relative; top: 0; z-index: 20; background: rgba(255,255,255,.95); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  #screen-lp-revised .lp-nav .lp-wrap { display: flex; align-items: center; justify-content: space-between; height: 62px; gap: 18px; }
+  #screen-lp-revised .logo { font-weight: 800; font-size: 22px; letter-spacing: -.02em; }
+  #screen-lp-revised .logo span { color: var(--brand); }
+  #screen-lp-revised .nav-links { display: flex; gap: 22px; font-size: 14px; }
+  #screen-lp-revised .nav-links a { color: var(--ink2); text-decoration: none; font-weight: 600; }
+  #screen-lp-revised .nav-cta { display: flex; align-items: center; gap: 14px; }
+  #screen-lp-revised .login-link { color: var(--ink2); text-decoration: none; font-weight: 600; font-size: 14px; }
+  #screen-lp-revised .lp-nav a.cta { background: var(--brand); color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 999px; font-weight: 700; font-size: 14px; }
+  #screen-lp-revised .hero { padding: 72px 0 88px; background: linear-gradient(180deg, #f0fbf4 0%, #ffffff 70%); }
+  #screen-lp-revised .hero .lp-wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+  #screen-lp-revised .hero h1 { font-size: 44px; line-height: 1.25; letter-spacing: -.02em; margin: 0 0 18px; }
+  #screen-lp-revised .lead { font-size: 18px; color: var(--ink2); margin: 0 0 28px; }
+  #screen-lp-revised .demo-card { background: #fff; border: 1px solid var(--line); border-radius: 18px; padding: 24px; box-shadow: var(--shadow); }
+  #screen-lp-revised .demo-stages { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  #screen-lp-revised .stage { background: #f5f8fb; border: 1px solid var(--line); border-radius: 10px; padding: 14px 8px; text-align: center; }
+  #screen-lp-revised .trust { background: #0f1b2d; padding: 0; }
+  #screen-lp-revised .trust .lp-wrap { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; }
+  #screen-lp-revised .trust .t { padding: 24px 20px; text-align: center; border-right: 1px solid #21344c; }
+  #screen-lp-revised .trust .t:last-child { border-right: 0; }
+  #screen-lp-revised .trust .t strong { display: block; font-size: 15px; color: #fff; margin-bottom: 2px; }
+  #screen-lp-revised .trust .t span { font-size: 12px; color: #9fb3cc; }
+  #screen-lp-revised .cv-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 24px; }
+  #screen-lp-revised .cv-card { border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; background: #fff; }
+  #screen-lp-revised .cv-card h3 { margin: 0 0 8px; font-size: 18px; }
+  #screen-lp-revised .cv-card p { margin: 0; color: var(--ink2); font-size: 14px; }
+  #screen-lp-revised .cv-pill { display:inline-block; background:#eafaf0; color:var(--brand-d); font-size:12px; font-weight:700; padding:4px 12px; border-radius:999px; margin: 0 auto 22px; }
+  #screen-lp-revised .cv-ill { width: 64px; height: 64px; border-radius: 14px; background: #eafaf0; display:flex; align-items:center; justify-content:center; margin-bottom: 14px; }
+  #screen-lp-revised .cv-ill svg { width: 38px; height: 38px; }
+  #screen-lp-revised .issue-card { background: var(--bg2); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; max-width: 1000px; margin: 0 auto 36px; }
+  #screen-lp-revised .issue-card .stages { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 16px 0; }
+  #screen-lp-revised .issue-stage { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 18px 16px; }
+  #screen-lp-revised .label-ng { display: inline-block; background: #ffe5e0; color: var(--warn); font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 6px; }
+  #screen-lp-revised .value-card { max-width: 820px; margin: 0 auto; background: #f0fbf4; border: 1px solid #bdeacb; border-radius: var(--radius); padding: 32px; }
+  #screen-lp-revised table.vt { width: 100%; border-collapse: collapse; background:#fff; border:1px solid var(--line); border-radius: 10px; overflow:hidden; }
+  #screen-lp-revised table.vt th, #screen-lp-revised table.vt td { padding: 12px 14px; text-align:center; border-bottom:1px solid var(--line); font-size: 14px; }
+  #screen-lp-revised table.vt th { background: var(--bg2); font-size: 13px; color: var(--ink2); }
+  #screen-lp-revised table.vt .brand-col { background:#f0fbf4; font-weight:700; color: var(--brand-d); }
+  #screen-lp-revised .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; max-width: 900px; margin: 0 auto; }
+  #screen-lp-revised .setup-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; text-align: center; }
+  #screen-lp-revised .setup-card ul { list-style: none; padding: 0; margin: 0 0 18px; font-size: 14px; color: var(--ink2); text-align: left; }
+  #screen-lp-revised .setup-card li { padding: 6px 0; border-bottom: 1px dashed var(--line); }
+  #screen-lp-revised .pgrid { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; max-width: 700px; margin: 0 auto; }
+  #screen-lp-revised .pcard { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; text-align: center; }
+  #screen-lp-revised .pcard ul { list-style: none; padding: 0; margin: 0 0 4px; text-align: left; font-size: 14px; color: var(--ink2); }
+  #screen-lp-revised .pcard li { padding: 6px 0; border-bottom: 1px dashed var(--line); }
+  #screen-lp-revised .faq-grid { max-width: 760px; margin: 0 auto; }
+  #screen-lp-revised .faq-item { border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 22px; margin-bottom: 12px; background: #fff; }
+  #screen-lp-revised .faq-item summary { font-weight: 700; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; font-size: 15px; }
+  #screen-lp-revised .faq-item summary::after { content: '+'; font-size: 24px; color: var(--brand); }
+  #screen-lp-revised .faq-item[open] summary::after { content: '\2212'; }
+  #screen-lp-revised .final { background: linear-gradient(135deg, #06c755, #04a847); color: #fff; text-align: center; }
+  #screen-lp-revised .final h2 { color: #fff; font-size: 32px; }
+  #screen-lp-revised .ba { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: center; max-width: 760px; margin: 32px auto 0; }
+  #screen-lp-revised .ba-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+  #screen-lp-revised .ba-card.after { background: #f0fbf4; border-color: #bdeacb; }
+  #screen-lp-revised .pause-figure { max-width: 940px; margin: 36px auto 0; background:#fff; border:1px solid var(--line); border-radius: var(--radius); padding: 20px 16px; }
+  #screen-lp-revised .case-item { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 26px; display: grid; grid-template-columns: 170px 1fr; gap: 24px; margin-bottom: 18px; }
+  #screen-lp-revised footer.lp-footer { padding: 36px 0 24px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; text-align: center; }
+</style>
+
+<header class="lp-nav"><div class="lp-wrap">
+  <div class="logo">line<span>trace</span></div>
+  <nav class="nav-links"><a href="#">課題</a><a href="#">解決策</a><a href="#">比較</a><a href="#">料金</a><a href="#">FAQ</a><a href="#">ブログ</a></nav>
+  <div class="nav-cta"><a href="#" class="login-link">ログイン</a><a href="#" class="cta">2週間無料で試す</a></div>
+</div></header>
+
+<section class="hero"><div class="lp-wrap">
+  <div>
+    <h1>LINEで消えていたCVを、<br>広告に返す。</h1>
+    <p class="lead">友だち追加・LINE内CV・LINE経由Web CV — 3 つの CV を Meta・Google・Yahoo に Conversions API で自動返却。<br>GTM タグ 1 行・10 分で導入。</p>
+    <a href="#" class="btn btn-primary">2週間無料で試す</a>
+    <div style="margin-top:10px;font-size:13px;color:var(--muted)">クレジットカード登録不要 / 設定 10 分</div>
+  </div>
+  <div class="demo-card">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><span style="width:9px;height:9px;border-radius:50%;background:var(--brand)"></span><span style="font-size:13px;color:var(--muted);font-weight:700">LINEのCVを、広告最適化に使えます。</span></div>
+    <div class="demo-stages">
+      <div class="stage"><div style="font-size:12px;font-weight:700">友だち追加 CV</div></div>
+      <div class="stage"><div style="font-size:12px;font-weight:700">LINE 内 CV</div></div>
+      <div class="stage"><div style="font-size:12px;font-weight:700">LINE 経由 Web CV</div></div>
+    </div>
+    <div style="text-align:center;color:var(--brand);font-size:18px;font-weight:800;margin:8px 0">&#8595; Conversions API で広告最適化へ</div>
+    <div style="background:#f0fbf4;border:1px solid #bdeacb;border-radius:10px;padding:14px;text-align:center">
+      <div style="font-size:12px;color:var(--brand-d);font-weight:700;margin-bottom:8px">各媒体の自動入札に CV を返却</div>
+      <div style="display:flex;justify-content:center;gap:8px;font-size:12px"><span style="background:#fff;border:1px solid var(--line);padding:6px 14px;border-radius:6px;font-weight:700">Meta</span><span style="background:#fff;border:1px solid var(--line);padding:6px 14px;border-radius:6px;font-weight:700">Google</span><span style="background:#fff;border:1px solid var(--line);padding:6px 14px;border-radius:6px;font-weight:700">Yahoo</span></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="trust"><div class="lp-wrap">
+  <div class="t"><div style="font-size:22px;margin-bottom:6px">&#9201;&#65039;</div><strong>最短10分で計測スタート</strong><span>GTM 1 行・Webhook 設定だけ</span></div>
+  <div class="t"><div style="font-size:22px;margin-bottom:6px">&#129309;</div><strong>設定は2通りから選べる</strong><span>自分で設定 / おまかせ代行（無料）</span></div>
+  <div class="t"><div style="font-size:22px;margin-bottom:6px">&#128180;</div><strong>月 &#165;10,000〜</strong><span>LINE公式 + 広告アカウント数の従量課金</span></div>
+  <div class="t"><div style="font-size:22px;margin-bottom:6px">&#127919;</div><strong>クレカ不要で試せる</strong><span>2 週間無料トライアル</span></div>
+</div></section>
+
+<section><div class="lp-wrap">
+  <p class="eyebrow" style="text-align:center">よくある課題</p>
+  <h2>LINE 経由のコンバージョン、<br>広告に返せていますか？</h2>
+  <p class="sub">計測ツールを入れていない状態では、<strong style="color:var(--ink)">友だち追加もその後の LINE 内アクションも、LINE 経由の Web 購入も、どれも広告に返っていません</strong>。</p>
+  <div class="issue-card">
+    <h3 style="margin:0 0 14px;font-size:20px">ツール未導入だと、ここが全部ロスになる</h3>
+    <div class="stages">
+      <div class="issue-stage"><div style="font-size:11px;font-weight:800;color:var(--brand-d);margin-bottom:8px">STEP 1</div><h4 style="font-size:17px;margin:0 0 4px">友だち追加</h4><div style="font-size:13px;color:var(--muted);margin-bottom:12px">広告→LP→LINE友だち追加</div><span class="label-ng">&#10005; 広告に返らない</span></div>
+      <div class="issue-stage"><div style="font-size:11px;font-weight:800;color:var(--brand-d);margin-bottom:8px">STEP 2</div><h4 style="font-size:17px;margin:0 0 4px">LINE 内アクション</h4><div style="font-size:13px;color:var(--muted);margin-bottom:12px">フォーム回答・リッチメニュータップ</div><span class="label-ng">&#10005; 広告に返らない</span></div>
+      <div class="issue-stage"><div style="font-size:11px;font-weight:800;color:var(--brand-d);margin-bottom:8px">STEP 3</div><h4 style="font-size:17px;margin:0 0 4px">Web で購入・予約</h4><div style="font-size:13px;color:var(--muted);margin-bottom:12px">LINE経由でWeb→購入・予約</div><span class="label-ng">&#10005; 広告に返らない</span></div>
+    </div>
+    <div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;margin-top:8px;font-size:14px;color:var(--ink2)">
+      <strong>なぜ計測ロスが起きるのか</strong><br>広告→LPまでは追えても、<strong>LINEを挟んだ瞬間にセッションが切れる</strong>からです。LINEアプリ内ブラウザはLPで保存したCookie（広告クリックID）を引き継がないため、広告側に何も返せません。
+    </div>
+    <div style="background:#fff4e5;border-left:3px solid var(--warn);padding:10px 14px;border-radius:8px;margin-top:14px;font-size:14px">結果、広告のAI（自動入札）が「本当に買ってくれるユーザー」を学習できず、配信最適化が止まり、CPAが高騰します。</div>
+  </div>
+  <div class="ba">
+    <div class="ba-card"><h3 style="font-size:15px;margin:0 0 10px">Before：説明できない</h3><p style="font-size:14px">媒体CV <span style="font-size:28px;font-weight:800">500</span></p><p style="font-size:14px">LINE実追加 <span style="font-size:28px;font-weight:800;color:var(--warn)">120</span></p><p style="color:var(--warn);font-weight:700;margin-top:6px;font-size:13px">→ 乖離で最適化も説明も不能</p></div>
+    <div style="font-size:26px;color:var(--brand);font-weight:800">→</div>
+    <div class="ba-card after"><h3 style="font-size:15px;margin:0 0 10px">After：実測できる</h3><p style="font-size:14px">媒体CV <span style="font-size:28px;font-weight:800">500</span></p><p style="font-size:14px">LINE実追加 <span style="font-size:28px;font-weight:800;color:var(--brand-d)">480</span></p><p style="color:var(--brand-d);font-weight:700;margin-top:6px;font-size:13px">→ CAPI連携で誤差解消・説明可能</p></div>
+  </div>
+</div></section>
+
+<section style="background:var(--bg2)"><div class="lp-wrap">
+  <p class="eyebrow" style="text-align:center">解決策</p>
+  <h2>3 つのコンバージョンを、<br>まとめて広告に返します</h2>
+  <p class="sub">友だち追加 / LINE 内 CV / LINE 経由 Web CV — どれも<strong style="color:var(--ink)">独立したイベント</strong>として Meta・Google・Yahoo に Conversions API で送信。</p>
+  <div style="text-align:center"><span class="cv-pill">3 つのイベント、すべて対応</span></div>
+  <div class="cv-grid">
+    <div class="cv-card"><div class="cv-ill"><svg viewBox="0 0 48 48" fill="none"><circle cx="19" cy="17" r="7" fill="#06c755"/><path d="M7 39c0-7 5.4-12 12-12s12 5 12 12" fill="#06c755"/><circle cx="37" cy="13" r="9" fill="#fff" stroke="#06c755" stroke-width="2.5"/><path d="M37 9v8M33 13h8" stroke="#06c755" stroke-width="2.5" stroke-linecap="round"/></svg></div><h3>友だち追加 CV</h3><p>Cookie で広告クリック ID を保持。実追加数とのズレを抑えて CAPI 送信。</p></div>
+    <div class="cv-card"><div class="cv-ill"><svg viewBox="0 0 48 48" fill="none"><path d="M9 9h30a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H22l-9 7v-7h-4a3 3 0 0 1-3-3V12a3 3 0 0 1 3-3z" fill="#06c755"/><path d="M16 20l5 5 9-9" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>LINE 内 CV</h3><p>LINE 内でのフォーム回答完了・リッチメニュー導線などのアクションを CV としてキャッチ。</p></div>
+    <div class="cv-card"><div class="cv-ill"><svg viewBox="0 0 48 48" fill="none"><rect x="6" y="9" width="36" height="26" rx="3" fill="#06c755"/><rect x="6" y="9" width="36" height="7" rx="3" fill="#04a847"/><path d="M17 26l5 5 10-11" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 38v4M18 42h12" stroke="#06c755" stroke-width="2.5" stroke-linecap="round"/></svg></div><h3>LINE 経由 Web CV</h3><p>LINE から Web に戻った後の購入・予約を、元の広告クリックに紐付けて返却。</p></div>
+  </div>
+</div></section>
+
+<section id="lp-comparison" style="background:var(--bg2)"><div class="lp-wrap">
+  <p class="eyebrow" style="text-align:center">比較</p>
+  <h2>対応が限られる計測まで、<br>もっと安く。</h2>
+  <div class="value-card">
+    <table class="vt">
+      <thead><tr><th>項目</th><th>一般的な計測ツール</th><th class="brand-col">Linetrace</th></tr></thead>
+      <tbody>
+        <tr><td style="text-align:left;font-weight:600">Meta / Google / Yahoo CAPI 送信</td><td>&#9675;</td><td class="brand-col">&#9675;</td></tr>
+        <tr><td style="text-align:left;font-weight:600">LP 内ボタン別の計測</td><td style="color:#c79a3a">&#9651;</td><td class="brand-col">&#9675;</td></tr>
+        <tr><td style="text-align:left;font-weight:600">3 つの CV</td><td style="color:#c79a3a">&#9651;</td><td class="brand-col">&#9675;</td></tr>
+        <tr><td style="text-align:left;font-weight:600">月額基本料金</td><td>¥25,000〜50,000</td><td class="brand-col">¥10,000〜</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></section>
+
+<section><div class="lp-wrap">
+  <p class="eyebrow" style="text-align:center">セットアップ</p>
+  <h2>設定方法を選べます。</h2>
+  <p class="sub">GTM や LINE 公式の操作に慣れている方はセルフサーブ、設定が不安な方はおまかせ設定（無料）。</p>
+  <div class="setup-grid">
+    <div class="setup-card"><div style="font-size:44px;margin-bottom:10px">&#9889;</div><h3 style="margin:0 0 4px;font-size:20px">自分で設定（セルフサーブ）</h3><div style="font-size:26px;font-weight:800;margin:6px 0 2px">&#165;0</div><div style="color:var(--muted);font-size:13px;margin-bottom:14px">ドキュメント・チャットサポート付き</div><ul><li>&#10003; GTMタグ1行 + Webhook URL設定</li><li>&#10003; ダッシュボードの指示に従って10分</li><li>&#10003; つまずいたらおまかせに切替可</li></ul><a href="#" class="btn btn-primary" style="display:block;width:100%">自分で設定する</a></div>
+    <div class="setup-card"><div style="font-size:44px;margin-bottom:10px">&#129309;</div><h3 style="margin:0 0 4px;font-size:20px">おまかせ設定</h3><div style="font-size:26px;font-weight:800;margin:6px 0 2px">&#165;0</div><div style="color:var(--muted);font-size:13px;margin-bottom:14px">トライアル期間中無料</div><ul><li>&#10003; アクセス権を渡すだけ（約5分）</li><li>&#10003; Linetraceチームが全設定を代行</li><li>&#10003; 1〜2営業日で完了</li></ul><a href="#" class="btn btn-primary" style="display:block;width:100%">おまかせで始める</a></div>
+  </div>
+</div></section>
+
+<section style="background:var(--bg2)"><div class="lp-wrap">
+  <p class="eyebrow" style="text-align:center">料金</p>
+  <h2>使った分だけ。シンプルな従量課金。</h2>
+  <p class="sub">CV 件数による課金なし。LINE 公式アカウント数と広告アカウント連携数だけで決まる明朗会計です。</p>
+  <div class="pgrid">
+    <div class="pcard"><h3 style="margin:0 0 4px;font-size:18px">基本料金</h3><div style="font-size:32px;font-weight:800;margin:8px 0 2px">&#165;10,000<span style="font-size:14px">/月</span></div><div style="color:var(--muted);font-size:13px;margin-bottom:14px">LINE 公式アカウントの友だち追加計測</div><ul><li>&#10003; 3 つの CV すべて対応</li><li>&#10003; LP 内ボタン単位の計測</li><li>&#10003; 2 週間無料トライアル</li></ul></div>
+    <div class="pcard"><h3 style="margin:0 0 4px;font-size:18px">広告アカウント連携</h3><div style="font-size:32px;font-weight:800;margin:8px 0 2px">&#165;3,000<span style="font-size:14px">/月</span></div><div style="color:var(--muted);font-size:13px;margin-bottom:14px">Meta / Google / Yahoo CAPI 自動送信</div><ul><li>&#10003; Meta Conversions API</li><li>&#10003; Google Measurement Protocol</li><li>&#10003; Yahoo 広告 CAPI（SS / YDA）</li><li>&#10003; 連携ごとに一時停止／再開可</li></ul></div>
+  </div>
+  <div style="text-align:center;margin-top:24px"><a href="#" class="btn btn-primary" style="font-size:16px;padding:14px 40px">2 週間無料で試す</a></div>
+</div></section>
+
+<section><div class="lp-wrap">
+  <p class="eyebrow" style="text-align:center">FAQ</p>
+  <h2>よくあるご質問</h2>
+  <div class="faq-grid">
+    <details class="faq-item"><summary>使わない月の広告アカウント連携費はどうなりますか？</summary><p>ダッシュボードから一時停止できます。停止中は課金対象外（計測は継続）。基本料金 ¥10,000 は継続します。</p></details>
+    <details class="faq-item"><summary>既存の Meta Pixel・GA4 はそのままで使えますか？</summary><p>はい。独立したカスタムイベントとして送信するため、既存の計測数値を汚しません。</p></details>
+    <details class="faq-item"><summary>既存の LINE 拡張ツール（エルメ・Lステップ等）と併用できますか？</summary><p>はい。Webhook を中継して既存ツールに転送する設計です。</p></details>
+    <details class="faq-item"><summary>導入にどのくらい時間がかかりますか？</summary><p>自分で設定する場合は最短 10 分。おまかせ設定なら 1〜2 営業日。</p></details>
+  </div>
+</div></section>
+
+<section class="final"><div class="lp-wrap">
+  <h2>LINE を跨いだ「真のコンバージョン」を、<br>今すぐ計測しはじめる。</h2>
+  <p style="color:#eafff2;max-width:640px;margin:0 auto 28px">クレジットカード登録不要、GTM タグ 1 行で 10 分で開始。</p>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <a href="#" class="btn btn-primary" style="background:#fff;color:var(--brand-d) !important">2 週間無料で試す</a>
+    <a href="#" class="btn btn-ghost" style="background:transparent;color:#fff !important;border:1.5px solid rgba(255,255,255,.7)">他社との違いを見る</a>
+  </div>
+</div></section>
+
+<footer class="lp-footer">
+  <a href="#" style="color:var(--ink2);margin:0 14px">プライバシーポリシー</a><a href="#" style="color:var(--ink2);margin:0 14px">利用規約</a><a href="#" style="color:var(--ink2);margin:0 14px">特定商取引法に基づく表記</a><a href="#" style="color:var(--ink2);margin:0 14px">ブログ</a>
+  <p style="margin-top:14px">&copy; 2026 Linetrace</p>
+</footer>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════
