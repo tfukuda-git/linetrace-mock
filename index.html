@@ -1567,15 +1567,23 @@ function renderPanel() {
   }
 
   list.innerHTML = filtered.map(c => `
-    <div class="comment-thread ${c.screenKey === screenKey ? '' : 'opacity-60'}" onclick="jumpToComment('${c.id}')" style="${c.resolved ? 'opacity:0.5' : ''}">
-      <div class="ct-screen">${c.screenKey} ${c.anchor ? '> ' + c.anchor : ''}</div>
-      <div>
-        <span class="ct-author">${c.author}</span>
-        <span class="ct-time">${new Date(c.created).toLocaleString('ja-JP', { month:'numeric', day:'numeric', hour:'numeric', minute:'numeric' })}</span>
-        ${c.resolved ? '<span style="color:#9ca3af; font-size:10px; margin-left:6px">解決済み</span>' : ''}
+    <div class="comment-thread ${c.screenKey === screenKey ? '' : 'opacity-60'}" style="${c.resolved ? 'opacity:0.5' : ''}">
+      <div style="display:flex; justify-content:space-between; align-items:start">
+        <div onclick="jumpToComment('${c.id}')" style="flex:1; cursor:pointer">
+          <div class="ct-screen">${c.screenKey} ${c.anchor ? '> ' + c.anchor : ''}</div>
+          <div>
+            <span class="ct-author">${c.author}</span>
+            <span class="ct-time">${new Date(c.created).toLocaleString('ja-JP', { month:'numeric', day:'numeric', hour:'numeric', minute:'numeric' })}</span>
+            ${c.resolved ? '<span style="color:#9ca3af; font-size:10px; margin-left:6px">解決済み</span>' : ''}
+          </div>
+          <div class="ct-body">${escapeHtml(c.body)}</div>
+          ${c.replies.length > 0 ? `<div class="ct-replies">${c.replies.length}件の返信</div>` : ''}
+        </div>
+        <div style="display:flex; gap:4px; margin-left:8px; flex-shrink:0">
+          <button onclick="event.stopPropagation(); toggleResolve('${c.id}')" style="background:none; border:none; cursor:pointer; font-size:14px; padding:2px" title="${c.resolved ? '未解決に戻す' : '解決済みにする'}">${c.resolved ? '🔄' : '✓'}</button>
+          <button onclick="event.stopPropagation(); deleteComment('${c.id}')" style="background:none; border:none; cursor:pointer; font-size:14px; padding:2px; color:#dc2626" title="削除">✕</button>
+        </div>
       </div>
-      <div class="ct-body">${escapeHtml(c.body)}</div>
-      ${c.replies.length > 0 ? `<div class="ct-replies">${c.replies.length}件の返信</div>` : ''}
     </div>
   `).join('');
 }
@@ -1719,6 +1727,33 @@ async function toggleResolve(commentId) {
       );
     } catch (err) {
       console.error('Failed to update GitHub issue:', err);
+    }
+  }
+}
+
+async function deleteComment(commentId) {
+  if (!confirm('このコメントを削除しますか？')) return;
+  const c = comments.find(x => x.id === commentId);
+  if (!c) return;
+  comments = comments.filter(x => x.id !== commentId);
+  openPinId = null;
+  saveToLocal();
+  renderPins();
+  renderPanel();
+
+  // Close GitHub Issue if linked
+  if (c.githubIssue && CONFIG.pat) {
+    try {
+      await fetch(
+        `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/issues/${c.githubIssue}`,
+        {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${CONFIG.pat}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ state: 'closed' }),
+        }
+      );
+    } catch (err) {
+      console.error('Failed to close GitHub issue:', err);
     }
   }
 }
