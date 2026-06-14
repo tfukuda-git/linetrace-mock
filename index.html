@@ -1697,7 +1697,7 @@ function addReply(commentId) {
   renderPanel();
 }
 
-function toggleResolve(commentId) {
+async function toggleResolve(commentId) {
   const c = comments.find(x => x.id === commentId);
   if (!c) return;
   c.resolved = !c.resolved;
@@ -1705,6 +1705,22 @@ function toggleResolve(commentId) {
   saveToLocal();
   renderPins();
   renderPanel();
+
+  // Sync to GitHub Issue (close/reopen)
+  if (c.githubIssue && CONFIG.pat) {
+    try {
+      await fetch(
+        `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/issues/${c.githubIssue}`,
+        {
+          method: 'PATCH',
+          headers: { 'Authorization': `Bearer ${CONFIG.pat}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ state: c.resolved ? 'closed' : 'open' }),
+        }
+      );
+    } catch (err) {
+      console.error('Failed to update GitHub issue:', err);
+    }
+  }
 }
 
 // ── Persistence (localStorage fallback) ──
