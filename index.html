@@ -1471,7 +1471,7 @@ function showScreen(name) {
   document.getElementById('screen-' + name).classList.add('active');
   document.querySelectorAll('.screen-nav button').forEach(b => b.classList.remove('active'));
   event.target.classList.add('active');
-  window.scrollTo(0, 0);
+  // keep scroll position on tab switch
   renderPins();
 }
 
@@ -1482,7 +1482,7 @@ function showScreenDirect(name) {
   document.querySelectorAll('.screen-nav button').forEach(b => {
     b.classList.toggle('active', b.getAttribute('onclick')?.includes(name));
   });
-  window.scrollTo(0, 0);
+  // keep scroll position on tab switch
   renderPins();
 }
 
